@@ -22,8 +22,8 @@ function ListCategory(props) {
   const { classes } = props;
   return (
     <List>
-      <ListItem className={classes.sub}>
-        <Checkbox onClick={props.handleCategoryClick}/>
+      <ListItem className={classes.sub} onClick={props.handleCategoryClick}>
+        <Checkbox checked={props.params.checked}/>
         <ListItemText primary={props.params.name}></ListItemText>
       </ListItem>
       {Object.keys(props.params.subs).map(sub => 

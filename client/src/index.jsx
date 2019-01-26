@@ -13,6 +13,7 @@ class App extends React.Component {
       categories: {
         'General Knowledge': {
           name: 'General Knowledge',
+          checked: true,
           order: 1,
           subs: {
             'TodayILearned': true,
@@ -28,8 +29,16 @@ class App extends React.Component {
   componentDidMount() {
   }
 
-  handleCategoryClick() {
-
+  handleCategoryClick(e) {
+    const cat = e.currentTarget.childNodes[1].textContent;
+    this.setState((state) => {
+      const newState = JSON.parse(JSON.stringify(state));
+      newState.categories[cat].checked = !state.categories[cat].checked
+      Object.keys(newState.categories[cat].subs).forEach(sub => {
+        newState.categories[cat].subs[sub] = newState.categories[cat].checked;
+      });
+      return newState;
+    });
   }
 
   handleSubClick(e) {
