@@ -17,6 +17,8 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "@material-ui/core": "^3.9.1",
+    "@material-ui/styles": "^3.0.0-alpha.9",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.6",
