@@ -16,8 +16,8 @@ const styles = {
 function ListSub(props) {
   const { classes } = props;
   return (
-    <ListItem className={classes.sub}>
-      <Checkbox/>
+    <ListItem className={classes.sub} onClick={props.handleSubClick}>
+      <Checkbox checked={props.checked}/>
       <ListItemText primary={props.text}></ListItemText>
     </ListItem>
   );

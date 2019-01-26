@@ -3,28 +3,47 @@ import ReactDOM from 'react-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListCategory from './components/ListCategory.jsx'
-import ListSub from './components/ListSub.jsx'
-
-
-
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      items: []
+      email: '',
+      categories: {
+        'General Knowledge': {
+          name: 'General Knowledge',
+          order: 1,
+          subs: {
+            'TodayILearned': true,
+            'ExplainLikeImFive': true
+          }
+        }
+      }
     }
+    this.handleCategoryClick = this.handleCategoryClick.bind(this);
+    this.handleSubClick = this.handleSubClick.bind(this);
   }
 
   componentDidMount() {
   }
 
+  handleCategoryClick() {
+
+  }
+
+  handleSubClick(e) {
+    const sub = e.currentTarget.childNodes[1].textContent;
+    const cat = e.currentTarget.parentNode.childNodes[0].childNodes[1].textContent;
+    this.setState((state) => {
+      const newState = JSON.parse(JSON.stringify(state));
+      newState.categories[cat].subs[sub] = !newState.categories[cat].subs[sub];
+      return newState;
+    });
+  }
+
   render () {
+    const categories = Object.values(this.state.categories);
     return (
       <React.Fragment>
       <CssBaseline />
@@ -37,12 +56,13 @@ class App extends React.Component {
         Preview below, then customize or subscribe.
       </Typography>
       <Drawer variant ='persistent' anchor='right' open={true}>
-        <List>
-          <ListCategory text='General Knowledge'/>
-          <ListSub text='TodayILearned'/>
-          <ListSub text='ExplainLikeImFive'/>
-          <ListSub text='EducationalGIFs'/>
-        </List>
+        {categories.map(category => 
+          <ListCategory 
+            key = {category.name} 
+            params = {category}
+            handleCategoryClick = {this.handleCategoryClick}
+            handleSubClick = {this.handleSubClick}
+          />)}
       </Drawer>
       </React.Fragment>
     )
