@@ -1,9 +1,6 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -14,15 +11,28 @@ const styles = theme => ({
     width: 80,
     marginLeft: 20
   },
+  category: {
+    marginTop: 50,
+  },
+  post: {
+    marginTop: 30,
+  }
 });
 
 function Category(props) {
   const { classes } = props;
+  console.log(props);
   return (
-    <div>
-      <Typography variant="h5">General Knowledge</Typography>
-      <Typography variant="h6">ELI5: Government Shut-Down</Typography>
-      <Typography variant="body1">As always, we require users to search for past topics before posting their own, so that we can avoid the unnecessary clutter of many people asking the same question.</Typography>
+    <div key = {'div_cat_' + props.category} className = {classes.category}>
+      <Typography variant="h5">{props.category}</Typography>
+      <Divider />
+      {props.data.map(post => (
+        <div key = {'div_post_' + post.data.id} className = {classes.post}>
+          <Typography variant="subtitle1">{post.data.title}</Typography>
+          <Typography variant="body1">{post.data.selftext} [read more]</Typography>
+          <Divider light={true}/>
+        </div>
+      ))}
     </div>
   )
 }

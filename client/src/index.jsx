@@ -15,7 +15,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 4,
     marginLeft: theme.spacing.unit * 6,
     [theme.breakpoints.up('md')]: {
-      width: 1000,
+      width: 800,
     }
   },
 });
@@ -83,11 +83,13 @@ class App extends React.Component {
   
   showTopPosts() {
     const display = {};
-    // For each category, combine and select top 10 posts
+    // For each category, combine and store sorted posts
     Object.keys(this.state.categories).forEach(category => {
       let allPosts = [];
       Object.keys(this.state.categories[category].subs).forEach(sub => {
-        allPosts = allPosts.concat(this.state.posts[sub]);
+        if (this.state.posts[sub]) {
+          allPosts = allPosts.concat(this.state.posts[sub]);
+        }
       });
       allPosts = allPosts.sort((postA, postB) => {
         return postB.data.ups - postA.data.ups;
@@ -120,6 +122,15 @@ class App extends React.Component {
   render () {
     const {classes} = this.props;
     const categories = Object.values(this.state.categories);
+    let emailPreview = '';
+    if (Object.keys(this.state.display).length) {
+      emailPreview = categories.map(category => 
+        <Category 
+          category = {category.name}
+          data = {this.state.display[category.name]} 
+          key = {category.name}
+        />);
+    };
     return (
       <React.Fragment>
       <CssBaseline />
@@ -132,12 +143,12 @@ class App extends React.Component {
         <Typography variant="h6"> 
           Preview below, then customize or subscribe.
         </Typography>
-        <Category/>
+        {emailPreview}
       </main>
       <Drawer variant ='persistent' anchor='right' open={true}>
         {categories.map(category => 
           <ListCategory 
-            key = {category.name} 
+            key = {'opt_' + category.name} 
             params = {category}
             handleCategoryClick = {this.handleCategoryClick}
             handleSubClick = {this.handleSubClick}
