@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
 import ListCategory from './components/ListCategory.jsx'
 import Category from './components/Category.jsx'
+import Subscribe from './components/Subscribe.jsx'
+import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
 
 
@@ -18,6 +21,9 @@ const styles = theme => ({
       width: 750,
     }
   },
+  subheader: {
+    marginBottom: 30
+  }
 });
 
 class App extends React.Component {
@@ -47,23 +53,35 @@ class App extends React.Component {
         }
       },
       posts: {},
-      display: {}
+      display: {},
+      mobileDrawerOpen: false,
+      subscribeModalOpen: false
     }
     this.handleCategoryClick = this.handleCategoryClick.bind(this);
     this.handleSubClick = this.handleSubClick.bind(this);
     this.showTopPosts = this.showTopPosts.bind(this);
+    this.openMobileDrawer = this.openMobileDrawer.bind(this);
+    this.closeMobileDrawer = this.closeMobileDrawer.bind(this);
+    this.openSubscribeModal = this.openSubscribeModal.bind(this);
+    this.closeSubscribeModal = this.closeSubscribeModal.bind(this);
   }
 
   componentDidMount() {
     this.getPosts();
+    let drawerOpen = true;
+    if (window.innerWidth < 960)
+    this.setState({
+      mobileDrawerOpen: true
+    })
   }
 
   getPosts() {
     const promises = [];
+    const categoriesAvailable = this.state.categories;
     // For each category
-    Object.keys(this.state.categories).forEach(category => {
-      Object.keys(this.state.categories[category].subs).forEach(sub => {
-        const subChecked = this.state.categories[category].subs[sub]
+    Object.keys(categoriesAvailable).forEach(category => {
+      Object.keys(categoriesAvailable[category].subs).forEach(sub => {
+        const subChecked = categoriesAvailable[category].subs[sub]
         // If sub doesn't yet exist in posts (ie. never fetched), get from Reddit
         if (!this.state.posts[sub] && subChecked) {
           promises.push(
@@ -72,7 +90,6 @@ class App extends React.Component {
                 const posts = JSON.parse(JSON.stringify(this.state.posts));
                 posts[sub] = data.data.children;
                 this.setState({posts});
-                // console.log(data.data.children);
               })
           );
         }
@@ -83,12 +100,13 @@ class App extends React.Component {
   
   showTopPosts() {
     const display = {};
+    const categoriesAvailable = this.state.categories;
     // For each category, combine and store sorted posts
-    Object.keys(this.state.categories).forEach(category => {
+    Object.keys(categoriesAvailable).forEach(category => {
       let allPosts = [];
-      Object.keys(this.state.categories[category].subs).forEach(sub => {
+      Object.keys(categoriesAvailable[category].subs).forEach(sub => {
         if (this.state.posts[sub]) {
-          if (this.state.categories[category].subs[sub]) {
+          if (categoriesAvailable[category].subs[sub]) {
             allPosts = allPosts.concat(this.state.posts[sub]);
           }
         }
@@ -96,15 +114,43 @@ class App extends React.Component {
       allPosts = allPosts.sort((postA, postB) => {
         return postB.data.ups - postA.data.ups;
       });
-      display[category] = allPosts;
+      if (allPosts.length) {
+        display[category] = allPosts;
+      }
     });
     this.setState({display});
+  }
+
+  openMobileDrawer() {
+    this.setState({
+      mobileDrawerOpen: true
+    });
+  }
+
+  closeMobileDrawer() {
+    this.setState({
+      mobileDrawerOpen: false
+    });
+  }
+
+  openSubscribeModal() {
+    this.setState({
+      subscribeModalOpen: true
+    });
+  }
+
+  closeSubscribeModal() {
+    this.setState({
+      subscribeModalOpen: false
+    });
   }
 
   handleCategoryClick(e) {
     const cat = e.currentTarget.childNodes[1].textContent;
     const categories = JSON.parse(JSON.stringify(this.state.categories));
+    // Toggle checked value
     categories[cat].checked = !categories[cat].checked;
+    // Set child subs' checked values to same
     Object.keys(categories[cat].subs).forEach(sub => {
       categories[cat].subs[sub] = categories[cat].checked;
     });
@@ -116,20 +162,21 @@ class App extends React.Component {
     const catName = e.currentTarget.parentNode.childNodes[0].childNodes[1].textContent;
     this.setState((state) => {
       const newState = JSON.parse(JSON.stringify(state));
-      newState.categories[catName].subs[subName] = !newState.categories[catName].subs[subName];
+      const clickedCategory = newState.categories[catName];
+      clickedCategory.subs[subName] = !clickedCategory.subs[subName];
       // If category is unchecked and we are checking a child sub, we should check the category
       if (!this.state.categories[catName].checked) {
-        newState.categories[catName].checked = true;
+        clickedCategory.checked = true;
       }
       // If all child subs are unchecked, parent category should also get unchecked
       let allSubsUnchecked = true;
-      Object.keys(newState.categories[catName].subs).forEach(sub => {
-        if (newState.categories[catName].subs[sub]) {
+      Object.keys(clickedCategory.subs).forEach(sub => {
+        if (clickedCategory.subs[sub]) {
           allSubsUnchecked = false;
         }
       });
         if (allSubsUnchecked) {
-          newState.categories[catName].checked = false;
+          clickedCategory.checked = false;
         }
       return newState;
     }, this.getPosts);
@@ -138,7 +185,6 @@ class App extends React.Component {
   render () {
     const {classes} = this.props;
     const categoriesAvailable = Object.entries(this.state.categories);
-    console.log(categoriesAvailable)
     const categoriesSelected = Object.entries(this.state.display);
     let emailPreview = '';
     if (Object.keys(this.state.display).length) {
@@ -150,28 +196,37 @@ class App extends React.Component {
         />)
       );
     }
+    const drawerContents = categoriesAvailable.map(category => 
+      <ListCategory 
+        key = {'opt_' + category[0]} 
+        params = {category[1]}
+        handleCategoryClick = {this.handleCategoryClick}
+        handleSubClick = {this.handleSubClick}
+      />)
     return (
       <React.Fragment>
       <CssBaseline />
       <main className={classes.layout}>
-        <Typography variant="h1">Reddit Newsletter</Typography>
-        <Typography variant="h6">
-          The most inspirational and educational posts from Reddit, delivered daily. 
+        <Typography variant="h1">Reddit By Email</Typography>
+        <Typography variant="h6" className={classes.subheader}>
+          Get the most interesting posts from Reddit, delivered to your inbox daily 
         </Typography>
         <Typography variant="h6"> 
-          Preview below, then customize or subscribe.
+          Preview below, then <Button variant="outlined" onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" onClick={this.openSubscribeModal}>subscribe</Button>
         </Typography>
+        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal}/>
         {emailPreview}
       </main>
-      <Drawer variant ='persistent' anchor='right' open={true}>
-        {categoriesAvailable.map(category => 
-          <ListCategory 
-            key = {'opt_' + category[0]} 
-            params = {category[1]}
-            handleCategoryClick = {this.handleCategoryClick}
-            handleSubClick = {this.handleSubClick}
-          />)}
-      </Drawer>
+      <Hidden smDown implementation='css'>
+        <Drawer variant ='permanent' anchor='right' open={true}>
+          {drawerContents}
+        </Drawer>
+      </Hidden>
+      <Hidden mdUp implementation='css'>
+        <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
+          {drawerContents}
+        </Drawer>
+      </Hidden>
       </React.Fragment>
     )
   }
