@@ -33,6 +33,16 @@ class App extends React.Component {
           subs: {
             'TodayILearned': true,
             'ExplainLikeImFive': false
+          },
+        },
+        'JavaScript': {
+          name: 'JavaScript',
+          checked: true,
+          order: 1,
+          subs: {
+            'JavaScript': true,
+            'node': true,
+            'ReactJS': true,
           }
         }
       },
@@ -41,6 +51,7 @@ class App extends React.Component {
     }
     this.handleCategoryClick = this.handleCategoryClick.bind(this);
     this.handleSubClick = this.handleSubClick.bind(this);
+    this.showTopPosts = this.showTopPosts.bind(this);
   }
 
   componentDidMount() {
@@ -48,28 +59,42 @@ class App extends React.Component {
   }
 
   getPosts() {
+    const promises = [];
     // For each category
     Object.keys(this.state.categories).forEach(category => {
       Object.keys(this.state.categories[category].subs).forEach(sub => {
         const subChecked = this.state.categories[category].subs[sub]
         // If sub doesn't yet exist in posts (ie. never fetched), get from Reddit
         if (!this.state.posts[sub] && subChecked) {
-          console.log(sub);
-          axios.get(`https://www.reddit.com/r/${sub}/top.json?limit=5`)
-            .then(({data}) => {
-              const posts = JSON.parse(JSON.stringify(this.state.posts));
-              posts[sub] = data.data.children;
-              this.setState({posts});
-              console.log(data.data.children);
-            });
+          promises.push(
+            axios.get(`https://www.reddit.com/r/${sub}/top.json?limit=5`)
+              .then(({data}) => {
+                const posts = JSON.parse(JSON.stringify(this.state.posts));
+                posts[sub] = data.data.children;
+                this.setState({posts});
+                // console.log(data.data.children);
+              })
+          );
         }
       });
     });
+    Promise.all(promises).then(this.showTopPosts);
   }
   
   showTopPosts() {
-    // Combine and select top 10
-    // When people select / deselect, only fetch the new categories
+    const display = {};
+    // For each category, combine and select top 10 posts
+    Object.keys(this.state.categories).forEach(category => {
+      let allPosts = [];
+      Object.keys(this.state.categories[category].subs).forEach(sub => {
+        allPosts = allPosts.concat(this.state.posts[sub]);
+      });
+      allPosts = allPosts.sort((postA, postB) => {
+        return postB.data.ups - postA.data.ups;
+      });
+      display[category] = allPosts;
+    });
+    this.setState({display});
   }
 
   handleCategoryClick(e) {
