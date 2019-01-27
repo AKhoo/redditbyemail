@@ -15,7 +15,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 4,
     marginLeft: theme.spacing.unit * 6,
     [theme.breakpoints.up('md')]: {
-      width: 800,
+      width: 750,
     }
   },
 });
@@ -88,7 +88,9 @@ class App extends React.Component {
       let allPosts = [];
       Object.keys(this.state.categories[category].subs).forEach(sub => {
         if (this.state.posts[sub]) {
-          allPosts = allPosts.concat(this.state.posts[sub]);
+          if (this.state.categories[category].subs[sub]) {
+            allPosts = allPosts.concat(this.state.posts[sub]);
+          }
         }
       });
       allPosts = allPosts.sort((postA, postB) => {
@@ -110,35 +112,51 @@ class App extends React.Component {
   }
 
   handleSubClick(e) {
-    const sub = e.currentTarget.childNodes[1].textContent;
-    const cat = e.currentTarget.parentNode.childNodes[0].childNodes[1].textContent;
+    const subName = e.currentTarget.childNodes[1].textContent;
+    const catName = e.currentTarget.parentNode.childNodes[0].childNodes[1].textContent;
     this.setState((state) => {
       const newState = JSON.parse(JSON.stringify(state));
-      newState.categories[cat].subs[sub] = !newState.categories[cat].subs[sub];
+      newState.categories[catName].subs[subName] = !newState.categories[catName].subs[subName];
+      // If category is unchecked and we are checking a child sub, we should check the category
+      if (!this.state.categories[catName].checked) {
+        newState.categories[catName].checked = true;
+      }
+      // If all child subs are unchecked, parent category should also get unchecked
+      let allSubsUnchecked = true;
+      Object.keys(newState.categories[catName].subs).forEach(sub => {
+        if (newState.categories[catName].subs[sub]) {
+          allSubsUnchecked = false;
+        }
+      });
+        if (allSubsUnchecked) {
+          newState.categories[catName].checked = false;
+        }
       return newState;
     }, this.getPosts);
   }
 
   render () {
     const {classes} = this.props;
-    const categories = Object.values(this.state.categories);
+    const categoriesAvailable = Object.entries(this.state.categories);
+    console.log(categoriesAvailable)
+    const categoriesSelected = Object.entries(this.state.display);
     let emailPreview = '';
     if (Object.keys(this.state.display).length) {
-      emailPreview = categories.map(category => 
+      emailPreview = categoriesSelected.map(category => (
         <Category 
-          category = {category.name}
-          data = {this.state.display[category.name]} 
-          key = {category.name}
-        />);
-    };
+        category = {category[0]}
+        data = {category[1]} 
+        key = {category[0]}
+        />)
+      );
+    }
     return (
       <React.Fragment>
       <CssBaseline />
       <main className={classes.layout}>
         <Typography variant="h1">Reddit Newsletter</Typography>
         <Typography variant="h6">
-          The most inspirational and educational posts from Reddit, 
-          delivered to you daily. 
+          The most inspirational and educational posts from Reddit, delivered daily. 
         </Typography>
         <Typography variant="h6"> 
           Preview below, then customize or subscribe.
@@ -146,10 +164,10 @@ class App extends React.Component {
         {emailPreview}
       </main>
       <Drawer variant ='persistent' anchor='right' open={true}>
-        {categories.map(category => 
+        {categoriesAvailable.map(category => 
           <ListCategory 
-            key = {'opt_' + category.name} 
-            params = {category}
+            key = {'opt_' + category[0]} 
+            params = {category[1]}
             handleCategoryClick = {this.handleCategoryClick}
             handleSubClick = {this.handleSubClick}
           />)}

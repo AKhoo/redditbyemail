@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -26,13 +27,21 @@ function Category(props) {
     <div key = {'div_cat_' + props.category} className = {classes.category}>
       <Typography variant="h5">{props.category}</Typography>
       <Divider />
-      {props.data.map(post => (
-        <div key = {'div_post_' + post.data.id} className = {classes.post}>
-          <Typography variant="subtitle1">{post.data.title}</Typography>
-          <Typography variant="body1">{post.data.selftext} [read more]</Typography>
-          <Divider light={true}/>
-        </div>
-      ))}
+      {props.data.map(post => {
+        let description = '';
+        if (post.data.selftext.length <= 172) {
+          description = post.data.selftext;
+        } else {
+          description = post.data.selftext.slice(0, 170) + '... Read More >>'
+        }
+        return (
+          <div key = {'div_post_' + post.data.id} className = {classes.post}>
+            <Link variant="subtitle1" href={post.data.url}>{post.data.title}</Link>
+            <Typography variant="body1">{description}</Typography>
+            <Divider light={true}/>
+          </div>
+        )
+      })}
     </div>
   )
 }
