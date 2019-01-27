@@ -26,13 +26,13 @@ const subSchema = mongoose.Schema({
   posts: [postSchema],
 });
 
-const customCategorySchema = mongoose.Schema({
+const subCollectionSchema = mongoose.Schema({
   _id: String,
   subs: [subSchema],
 });
 
 const Post = mongoose.model('Post', postSchema);
 const Sub = mongoose.model('Sub', subSchema);
-const CustomCategory = mongoose.model('CustomCategory', customCategorySchema);
+const SubCollection = mongoose.model('SubCollection', subCollectionSchema);
 
-module.exports = { CustomCategory, Post, Sub };
+module.exports = { SubCollection, Post, Sub };
