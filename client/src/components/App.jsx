@@ -10,9 +10,9 @@ import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
-import ListCategory from './ListCategory.jsx';
-import Subscribe from './Subscribe.jsx';
-import Email from './Email.jsx';
+import ListCategory from './ListCategory.jsx'
+import Subscribe from './Subscribe.jsx'
+import Email from './Email.jsx'
 
 
 const styles = theme => ({

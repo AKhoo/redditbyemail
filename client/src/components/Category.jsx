@@ -4,7 +4,6 @@ import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ForumIcon from '@material-ui/icons/ForumOutlined';
 
 
 const styles = theme => ({
@@ -35,11 +34,8 @@ const styles = theme => ({
   },
   icon: {
     marginLeft: 6,
-    marginTop: 2,
     verticalAlign: 'text-top',
-    color: 'lightgrey',
     display: 'inline-block',
-    fontSize: 14
   }
 });
 
@@ -50,17 +46,12 @@ function Category(props) {
       <Typography className={classes.cat} variant="h5">{props.category}</Typography>
       <Divider />
       {props.data.map(post => {
-        let description = '';
-        if (post.selftext.length <= 172) {
-          description = post.selftext;
-        } else {
-          description = post.selftext.slice(0, 170) + '... Read More >>'
-        }
         return (
           <div key = {'div_post_' + post._id} className = {classes.post}>
             <Link variant="subtitle1" className={classes.postTitle} href={post.url} target="_blank">{post.title}</Link>
-            <Link href={`https://www.reddit.com${post.permalink}`} target="_blank"><ForumIcon className={classes.icon}/></Link>
-            <Typography variant="body1" className={classes.desc}>{description}</Typography>
+            <Link href={`https://www.reddit.com${post.permalink}`} target="_blank">
+              <img src='https://s3-us-west-1.amazonaws.com/redditbyemail/forumicon.png' className={classes.icon}/>
+            </Link>
             <Divider className={classes.divider} light={true}/>
           </div>
         )

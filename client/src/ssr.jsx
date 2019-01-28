@@ -8,6 +8,8 @@ import {
   createMuiTheme,
   createGenerateClassName,
 } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 
  // Create a sheetsRegistry instance.
  const sheetsRegistry = new SheetsRegistry();
@@ -27,16 +29,20 @@ import {
 
  // Render the component to a string.
  const styledEmail = (categoriesSelected, callback) => {
- const html = ReactDOMServer.renderToString(
-    <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
-      <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
-        <Email categoriesSelected={categoriesSelected}/>
-      </MuiThemeProvider>
-    </JssProvider>
-  )
-  // Grab the CSS from our sheetsRegistry.
-  const css = sheetsRegistry.toString();
-  callback(html, css);
+  const today = new Date();
+  const dateString = `${today.toLocaleString('en', { weekday: 'long'})} ${today.toLocaleString('en', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+  const html = ReactDOMServer.renderToString(
+      <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
+        <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
+          <Typography variant="h4" align="center">Reddit By Email</Typography>
+          <Typography variant="subtitle2" align="center">{dateString}</Typography>
+          <Email categoriesSelected={categoriesSelected}/>
+        </MuiThemeProvider>
+      </JssProvider>
+    )
+    // Grab the CSS from our sheetsRegistry.
+    const css = sheetsRegistry.toString();
+    callback(html, css);
  }
 
 
