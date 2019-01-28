@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const env = require('../.env');
+const Email = require('../client/dist/bundle-ssr');
 
 const transport = nodemailer.createTransport({
   host: 'email-smtp.us-west-2.amazonaws.com',
@@ -10,6 +11,11 @@ const transport = nodemailer.createTransport({
     pass: env.smtpPassword,
   },
 });
+
+// For each user
+  // Get their relevant posts
+  // Format to shape expected by Email component
+  // Render email component
 
 const mailOptions = {
   from: "Adrian <adriankhoo.ca@gmail.com>", // sender address

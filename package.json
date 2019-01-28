@@ -1,13 +1,12 @@
 {
-  "name": "github-fetcher-fullstack-v2",
-  "version": "1.0.0",
+  "name": "redditByEmail",
+  "version": "0.5.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/index.js"
   },
-  "author": "Beth Johnson",
+  "author": "Adrian Khoo",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -32,6 +31,7 @@
     "bottleneck": "^2.15.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.6",
+    "nodemailer": "^5.1.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0"
   }
