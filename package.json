@@ -30,9 +30,11 @@
     "body-parser": "^1.18.3",
     "bottleneck": "^2.15.3",
     "express": "^4.16.4",
+    "juice": "^5.1.0",
     "mongoose": "^5.4.6",
     "nodemailer": "^5.1.1",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react-dom": "^16.7.0",
+    "react-jss": "^8.6.1"
   }
 }

@@ -1,9 +1,18 @@
 const nodemailer = require('nodemailer');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
+const { SheetsRegistry } = require('jss');
+// const JssProvider = require('react-jss/lib/JssProvider');
+const {
+  MuiThemeProvider,
+  createMuiTheme,
+  createGenerateClassName,
+} = require('@material-ui/core/styles');
+const juice = require('juice');
 const env = require('../.env');
 const User = require('../db/user');
-const Email = require('../client/dist/bundle-ssr');
+const styledEmail = require('../client/dist/bundle-ssr');
+
 
 const transport = nodemailer.createTransport({
   host: 'email-smtp.us-west-2.amazonaws.com',
@@ -20,27 +29,36 @@ User.getAll((users) => {
   users.forEach((user) => {
     User.getPostsBySubCollection(user.email, (allPosts) => {
       const randomSub = Object.keys(allPosts)[Math.floor(Math.random() * Object.keys(allPosts).length)];
+      let titlePrefix = randomSub;
+      if (Object.keys(allPosts).length > 1) {
+        titlePrefix += ' & More';
+      }
       let randomTopPost = allPosts[randomSub][0].title;
       if (randomTopPost.length > 147) {
         randomTopPost = `${randomTopPost.slice(0, 148)}...`;
       }
-      console.log(allPosts);
-      const email = React.createElement(Email, { categoriesSelected: Object.entries(allPosts) });
+      let juicedEmail = ''
+      styledEmail(Object.entries(allPosts), (html, css) => {
+        juicedEmail = juice(`
+          <style id="jss-server-side">${css}</style>
+          <body>${html}</body>
+        `);
+      });
 
       const mailOptions = {
         from: "Reddit By Email <adriankhoo.ca@gmail.com>", // sender address
         to: "Adrian <adriankhoo.ca@gmail.com>", // list of receivers
-        subject: randomTopPost, // Subject line
-        html: ReactDOMServer.renderToString(email), // email body
+        subject: `${titlePrefix}: ${randomTopPost}`, // Subject line
+        html: juicedEmail, // email body
       };
 
-      // transport.sendMail(mailOptions, (error, response) => {
-      //   if (error) {
-      //     console.log(error);
-      //   } else {
-      //     console.log("Message sent: " + response.message);
-      //   }
-      // });
+      transport.sendMail(mailOptions, (error, response) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Message sent: " + response.message);
+        }
+      });
     })
   })
 })

@@ -33,6 +33,10 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+User.getAll = (callback) => {
+  User.find({}).then(data => callback(data));
+};
+
 User.add = (object) => {
   User.create(object)
     .then((userResult) => {
@@ -85,7 +89,7 @@ User.getPostsBySubCollection = (email, callback) => {
           console.log('getting posts for', category.subCollection);
           db.SubCollection.findOne({ _id: category.subCollection }, { posts: true })
             .then(({ posts }) => {
-              allPosts[category.name] = posts;
+              allPosts[category.name] = posts.slice(0, 4);
               getNextSubColl();
             })
             .catch(err => console.log(err));

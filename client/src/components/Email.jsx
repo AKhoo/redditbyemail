@@ -1,5 +1,6 @@
 import React from 'react';
 import Category from './Category.jsx'
+import Button from '@material-ui/core/Button';
 
 const Email = (props) => {
   return (
