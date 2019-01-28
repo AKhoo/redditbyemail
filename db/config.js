@@ -28,7 +28,7 @@ const subSchema = mongoose.Schema({
 
 const subCollectionSchema = mongoose.Schema({
   _id: String,
-  subs: [postSchema],
+  posts: [postSchema],
 });
 
 const Post = mongoose.model('Post', postSchema);

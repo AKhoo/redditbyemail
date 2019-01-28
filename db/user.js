@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const db = require('./config');
+const async = require('async');
+
 
 const customCategory = mongoose.Schema({
   name: String,
@@ -70,6 +72,28 @@ User.add = (object) => {
     })
     .catch((userErr) => {
       console.log('Error - user create', userErr);
+    });
+};
+
+User.getPosts = (email, callback) => {
+  const dbOps = [];
+  const allPosts = {};
+  User.findOne({ email })
+    .then(({ customCategories }) => {
+      customCategories.forEach((category) => {
+        console.log('foo');
+        dbOps.push((getNextSubColl) => {
+          console.log('getting posts for', category.subCollection);
+          db.SubCollection.findOne({ _id: category.subCollection }, { posts: true })
+            .then(({ posts }) => {
+              allPosts[category.name] = posts;
+              getNextSubColl();
+            })
+            .catch(err => console.log(err));
+        });
+      });
+      dbOps.push(() => callback(allPosts));
+      async.series(dbOps);
     });
 };
 
