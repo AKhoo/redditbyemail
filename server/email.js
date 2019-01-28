@@ -62,8 +62,3 @@ User.getAll((users) => {
     })
   })
 })
-  // Get their relevant posts
-  // Format to shape expected by Email component
-  // Render email component
-
-  // transport.close(); // shut down the connection pool, no more messages

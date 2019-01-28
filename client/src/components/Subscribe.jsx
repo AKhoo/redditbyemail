@@ -7,37 +7,54 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const Subscribe = (props) => {
-  return (
-    <Dialog
-      open={props.subscribeModalOpen}
-      onClose={props.closeSubscribeModal}
-    >
-      <DialogTitle>Subscribe</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Enter your email below. 
-          We'll send you the best of Reddit daily, with the categories and subreddits you selected!
-        </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Email Address"
-          type="email"
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button color="default" onClick={props.closeSubscribeModal}>
-          Cancel
-        </Button>
-        <Button variant="contained" color="secondary">
-          Subscribe
-        </Button>
-      </DialogActions>
-    </Dialog>
-  )
+class Subscribe extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      email: ''
+    }
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(e) {
+    this.setState({email: e.target.value});
+  }
+
+  render() {
+    return (
+      <Dialog
+        open={this.props.subscribeModalOpen}
+        onClose={this.props.closeSubscribeModal}
+      >
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Enter your email below. 
+            We'll send you the best of Reddit daily, with the categories and subreddits you selected!
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+            value={this.state.email}
+            onChange={this.handleInputChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button color="default" onClick={this.props.closeSubscribeModal}>
+            Cancel
+          </Button>
+          <Button variant="contained" color="secondary" onClick={() => {this.props.handleSubscribe(this.state.email)}}>
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
 }
 
 export default Subscribe;

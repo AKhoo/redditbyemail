@@ -170,6 +170,7 @@ class App extends React.Component {
     this.closeMobileDrawer = this.closeMobileDrawer.bind(this);
     this.openSubscribeModal = this.openSubscribeModal.bind(this);
     this.closeSubscribeModal = this.closeSubscribeModal.bind(this);
+    this.handleSubscribe = this.handleSubscribe.bind(this);
   }
 
   componentDidMount() {
@@ -270,6 +271,10 @@ class App extends React.Component {
     }, this.showTopPosts);
   }
 
+  handleSubscribe(email) {
+    axios.post('api/users', { email, preferences: this.state.categories });
+  }
+
   render () {
     const {classes} = this.props;
     const categoriesAvailable = Object.entries(this.state.categories);
@@ -296,7 +301,7 @@ class App extends React.Component {
         <Typography variant="h6"> 
           Preview below, then <Button variant="outlined" onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" onClick={this.openSubscribeModal}>subscribe</Button>
         </Typography>
-        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal}/>
+        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe}/>
         {emailPreview}
       </main>
       <Hidden smDown implementation='css'>
