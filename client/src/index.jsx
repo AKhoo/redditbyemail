@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import ListCategory from './components/ListCategory.jsx'
 import Category from './components/Category.jsx'
 import Subscribe from './components/Subscribe.jsx'
@@ -22,7 +25,16 @@ const styles = theme => ({
     }
   },
   subheader: {
-    marginBottom: 30
+    marginBottom: 30,
+  },
+  checkAll: {
+    height: 25,
+    paddingBottom: 0
+  },
+  checkAllText: {
+    paddingLeft: 15,
+    fontSize: '0.7 rem',
+    color: 'grey'
   }
 });
 
@@ -192,7 +204,7 @@ class App extends React.Component {
         return postB.ups - postA.ups;
       });
       if (allPosts.length) {
-        display[category] = allPosts;
+        display[category] = allPosts.slice(0, 5); // Only display top 5 of each category
       }
     });
     this.setState({display});
@@ -296,11 +308,19 @@ class App extends React.Component {
       </main>
       <Hidden smDown implementation='css'>
         <Drawer variant ='permanent' anchor='right' open={true}>
+          <List>
+            <ListItem className={classes.checkAll}>
+            <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
+            </ListItem>
+          </List>
           {drawerContents}
         </Drawer>
       </Hidden>
       <Hidden mdUp implementation='css'>
         <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
+          <List>
+            <ListItem>Check</ListItem>
+          </List>
           {drawerContents}
         </Drawer>
       </Hidden>

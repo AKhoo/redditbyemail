@@ -14,7 +14,7 @@ const styles = {
     border: 0,
     borderRadius: 3,
     color: 'white',
-    height: 48,
+    height: 42,
   },
 };
 
