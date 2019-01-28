@@ -75,13 +75,12 @@ User.add = (object) => {
     });
 };
 
-User.getPosts = (email, callback) => {
+User.getPostsBySubCollection = (email, callback) => {
   const dbOps = [];
   const allPosts = {};
   User.findOne({ email })
     .then(({ customCategories }) => {
       customCategories.forEach((category) => {
-        console.log('foo');
         dbOps.push((getNextSubColl) => {
           console.log('getting posts for', category.subCollection);
           db.SubCollection.findOne({ _id: category.subCollection }, { posts: true })
@@ -90,6 +89,30 @@ User.getPosts = (email, callback) => {
               getNextSubColl();
             })
             .catch(err => console.log(err));
+        });
+      });
+      dbOps.push(() => callback(allPosts));
+      async.series(dbOps);
+    });
+};
+
+User.getPostsBySub = (email, callback) => {
+  const dbOps = [];
+  const allPosts = {};
+  User.findOne({ email })
+    .then(({ customCategories }) => {
+      customCategories.forEach((category) => {
+        const subs = category.subCollection.split(' ');
+        subs.forEach((subName) => {
+          dbOps.push((getNextSub) => {
+            console.log('getting posts for', subName);
+            db.Sub.findOne({ _id: subName })
+              .then(({ posts }) => {
+                allPosts[subName] = posts;
+                getNextSub();
+              })
+              .catch(err => console.log(err));
+          });
         });
       });
       dbOps.push(() => callback(allPosts));

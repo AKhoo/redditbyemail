@@ -45,22 +45,21 @@ const styles = theme => ({
 
 function Category(props) {
   const { classes } = props;
-  console.log(props.data);
   return (
     <div key = {'div_cat_' + props.category} className = {classes.category}>
       <Typography className={classes.cat} variant="h5">{props.category}</Typography>
       <Divider />
       {props.data.map(post => {
         let description = '';
-        if (post.data.selftext.length <= 172) {
-          description = post.data.selftext;
+        if (post.selftext.length <= 172) {
+          description = post.selftext;
         } else {
-          description = post.data.selftext.slice(0, 170) + '... Read More >>'
+          description = post.selftext.slice(0, 170) + '... Read More >>'
         }
         return (
-          <div key = {'div_post_' + post.data.id} className = {classes.post}>
-            <Link variant="subtitle1" className={classes.postTitle} href={post.data.url} target="_blank">{post.data.title}</Link>
-            <Link href={`https://www.reddit.com${post.data.permalink}`} target="_blank"><ForumIcon className={classes.icon}/></Link>
+          <div key = {'div_post_' + post._id} className = {classes.post}>
+            <Link variant="subtitle1" className={classes.postTitle} href={post.url} target="_blank">{post.title}</Link>
+            <Link href={`https://www.reddit.com${post.permalink}`} target="_blank"><ForumIcon className={classes.icon}/></Link>
             <Typography variant="body1" className={classes.desc}>{description}</Typography>
             <Divider className={classes.divider} light={true}/>
           </div>

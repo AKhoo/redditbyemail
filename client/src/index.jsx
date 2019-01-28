@@ -47,7 +47,7 @@ class App extends React.Component {
           order: 1,
           subs: {
             'JavaScript': true,
-            'node': true,
+            'Node': true,
             'ReactJS': true,
           }
         }
@@ -76,26 +76,8 @@ class App extends React.Component {
   }
 
   getPosts() {
-    const promises = [];
-    const categoriesAvailable = this.state.categories;
-    // For each category
-    Object.keys(categoriesAvailable).forEach(category => {
-      Object.keys(categoriesAvailable[category].subs).forEach(sub => {
-        const subChecked = categoriesAvailable[category].subs[sub]
-        // If sub doesn't yet exist in posts (ie. never fetched), get from Reddit
-        if (!this.state.posts[sub] && subChecked) {
-          promises.push(
-            axios.get(`https://www.reddit.com/r/${sub}/top.json?limit=5`)
-              .then(({data}) => {
-                const posts = JSON.parse(JSON.stringify(this.state.posts));
-                posts[sub] = data.data.children;
-                this.setState({posts});
-              })
-          );
-        }
-      });
-    });
-    Promise.all(promises).then(this.showTopPosts);
+    axios.get(`/api/posts`)
+      .then(({ data }) => this.setState({ posts : data }, this.showTopPosts));
   }
   
   showTopPosts() {
@@ -112,7 +94,7 @@ class App extends React.Component {
         }
       });
       allPosts = allPosts.sort((postA, postB) => {
-        return postB.data.ups - postA.data.ups;
+        return postB.ups - postA.ups;
       });
       if (allPosts.length) {
         display[category] = allPosts;
@@ -154,7 +136,7 @@ class App extends React.Component {
     Object.keys(categories[cat].subs).forEach(sub => {
       categories[cat].subs[sub] = categories[cat].checked;
     });
-    this.setState({categories}, this.getPosts);
+    this.setState({categories}, this.showTopPosts);
   }
 
   handleSubClick(e) {
@@ -179,7 +161,7 @@ class App extends React.Component {
           clickedCategory.checked = false;
         }
       return newState;
-    }, this.getPosts);
+    }, this.showTopPosts);
   }
 
   render () {
