@@ -20,8 +20,11 @@ User.getAll((users) => {
   users.forEach((user) => {
     User.getPostsBySubCollection(user.email, (allPosts) => {
       const randomSub = Object.keys(allPosts)[Math.floor(Math.random() * Object.keys(allPosts).length)];
-      const randomTopPost = allPosts[randomSub][0].title;
-      console.log('Random Top Post:', randomTopPost);
+      let randomTopPost = allPosts[randomSub][0].title;
+      if (randomTopPost.length > 147) {
+        randomTopPost = `${randomTopPost.slice(0, 148)}...`;
+      }
+      console.log(allPosts);
       const email = React.createElement(Email, { categoriesSelected: Object.entries(allPosts) });
 
       const mailOptions = {
@@ -31,13 +34,13 @@ User.getAll((users) => {
         html: ReactDOMServer.renderToString(email), // email body
       };
 
-      transport.sendMail(mailOptions, (error, response) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Message sent: " + response.message);
-        }
-      });
+      // transport.sendMail(mailOptions, (error, response) => {
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log("Message sent: " + response.message);
+      //   }
+      // });
     })
   })
 })
