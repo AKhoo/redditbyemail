@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/reddit');
+mongoose.connect('mongodb://localhost/reddit', { useNewUrlParser: true });
 
 const db = mongoose.connection;
 
@@ -28,7 +28,7 @@ const subSchema = mongoose.Schema({
 
 const subCollectionSchema = mongoose.Schema({
   _id: String,
-  subs: [subSchema],
+  subs: [postSchema],
 });
 
 const Post = mongoose.model('Post', postSchema);
