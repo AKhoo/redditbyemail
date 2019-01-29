@@ -78,7 +78,6 @@ const updateSubCollection = (subCollId, updateNextSubColl) => {
   });
   dbOps.push((doneSubColl) => {
     allPosts = allPosts.sort((postA, postB) => postB.ups - postA.ups);
-    console.log(allPosts[0]);
     db.SubCollection.findOneAndUpdate(
       { _id: subCollId },
       { posts: allPosts },
@@ -87,7 +86,6 @@ const updateSubCollection = (subCollId, updateNextSubColl) => {
       .catch(err => console.log(err));
   });
   dbOps.push(() => updateNextSubColl());
-  console.log(dbOps.length);
   async.series(dbOps);
 };
 

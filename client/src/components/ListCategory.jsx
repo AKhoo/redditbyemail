@@ -25,7 +25,7 @@ function ListCategory(props) {
   return (
     <List>
       <ListItem className={classes.sub} onClick={props.handleCategoryClick}>
-        <Checkbox checked={props.params.checked}/>
+        <Checkbox checked={props.params.checked} disableRipple/>
         <ListItemText primary={props.params.name}></ListItemText>
         <div> 
           <ExpandLess onClick={() => {props.handleReorder(props.params.name, 'up')}}/>

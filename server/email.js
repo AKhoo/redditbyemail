@@ -33,6 +33,10 @@ User.getAll((users) => {
       if (Object.keys(allPosts).length > 1) {
         titlePrefix += ' & More';
       }
+      console.log(randomSub);
+      // console.log(allPosts);
+      // console.log(allPosts[randomSub]);
+      // console.log(allPosts[randomSub][0]);
       let randomTopPost = allPosts[randomSub][0].title;
       if (randomTopPost.length > 147) {
         randomTopPost = `${randomTopPost.slice(0, 148)}...`;
@@ -46,10 +50,10 @@ User.getAll((users) => {
       });
 
       const mailOptions = {
-        from: "Reddit By Email <adriankhoo.ca@gmail.com>", // sender address
-        to: "Adrian <adriankhoo.ca@gmail.com>", // list of receivers
-        subject: `${titlePrefix}: ${randomTopPost}`, // Subject line
-        html: juicedEmail, // email body
+        from: "Reddit By Email <adriankhoo.ca@gmail.com>",
+        to: user.email,
+        subject: `${titlePrefix}: ${randomTopPost}`,
+        html: juicedEmail,
       };
 
       transport.sendMail(mailOptions, (error, response) => {

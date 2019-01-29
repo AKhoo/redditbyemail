@@ -161,7 +161,8 @@ class App extends React.Component {
       posts: {},
       display: {},
       mobileDrawerOpen: false,
-      subscribeModalOpen: false
+      subscribeModalOpen: false,
+      checkAll: false,
     }
     this.handleCategoryClick = this.handleCategoryClick.bind(this);
     this.handleSubClick = this.handleSubClick.bind(this);
@@ -172,6 +173,7 @@ class App extends React.Component {
     this.closeSubscribeModal = this.closeSubscribeModal.bind(this);
     this.handleSubscribe = this.handleSubscribe.bind(this);
     this.handleReorder = this.handleReorder.bind(this);
+    this.toggleAll = this.toggleAll.bind(this);
   }
 
   componentDidMount() {
@@ -274,12 +276,23 @@ class App extends React.Component {
     }, this.showTopPosts);
   }
 
+  toggleAll() {
+    const categories = JSON.parse(JSON.stringify(this.state.categories));
+    for (let cat in categories) {
+      categories[cat].checked = this.state.checkAll;
+      for (let sub in categories[cat].subs) {
+        categories[cat].subs[sub] = this.state.checkAll;
+      }
+    }
+    this.setState({ categories, checkAll: !this.state.checkAll }, this.showTopPosts)
+  }
+
   handleSubscribe(email) {
     let customCategories = [];
-    for (var cat in this.state.categories) {
+    for (let cat in this.state.categories) {
       if (this.state.categories[cat].checked) {
         let subCollection = [];
-        for (var sub in this.state.categories[cat].subs) {
+        for (let sub in this.state.categories[cat].subs) {
           if (this.state.categories[cat].subs[sub]) {
             subCollection.push(sub);
           }
@@ -300,7 +313,7 @@ class App extends React.Component {
     if (currentOrder == 1 && direction === 'up' || currentOrder == categoriesCount && direction === 'down') {
       return;
     } else {
-      for (var key in categories) {
+      for (let key in categories) {
         if (direction === 'up') {
           if (categories[key].order === currentOrder - 1) {
             categories[key].order += 1;
@@ -352,7 +365,7 @@ class App extends React.Component {
       <Hidden smDown implementation='css'>
         <Drawer variant ='permanent' anchor='right' open={true}>
           <List>
-            <ListItem className={classes.checkAll}>
+            <ListItem className={classes.checkAll} onClick={this.toggleAll}>
             <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
             </ListItem>
           </List>
@@ -362,7 +375,7 @@ class App extends React.Component {
       <Hidden mdUp implementation='css'>
         <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
           <List>
-            <ListItem className={classes.checkAll}>
+            <ListItem className={classes.checkAll} onClick={this.toggleAll}>
             <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
             </ListItem>
           </List>

@@ -50,27 +50,29 @@ User.add = (object) => {
               _id: sub,
             });
           });
-          db.SubCollection.findOneAndUpdate(
-            { _id: category.subCollection },
-            { _id: category.subCollection, subs },
-            { upsert: true },
-          )
-            .then((subCollResult) => {
-              console.log('Success - subCollection findOneAndUpdate');
-              if (!subCollResult) {
-                // Create subs that don't exist
-                subs.forEach((sub) => {
-                  db.Sub.findOneAndUpdate(
-                    { _id: sub },
-                    { _id: sub },
-                    { upsert: true },
-                  )
-                    .then(() => console.log('Success - Sub findOneAndUpdate:'))
-                    .catch(subErr => console.log('Error - Sub findOneAndUpdate:', subErr));
-                });
-              }
-            })
-            .catch(subCollErr => console.log('Error - subCollection findOneAndUpdate', subCollErr));
+          if (subs.length) {
+            db.SubCollection.findOneAndUpdate(
+              { _id: category.subCollection },
+              { _id: category.subCollection, subs },
+              { upsert: true },
+            )
+              .then((subCollResult) => {
+                console.log('Success - subCollection findOneAndUpdate');
+                if (!subCollResult) {
+                  // Create subs that don't exist
+                  subs.forEach((sub) => {
+                    db.Sub.findOneAndUpdate(
+                      { _id: sub },
+                      { _id: sub },
+                      { upsert: true },
+                    )
+                      .then(() => console.log('Success - Sub findOneAndUpdate:'))
+                      .catch(subErr => console.log('Error - Sub findOneAndUpdate:', subErr));
+                  });
+                }
+              })
+              .catch(subCollErr => console.log('Error - subCollection findOneAndUpdate', subCollErr));
+          }
         });
       }
     })

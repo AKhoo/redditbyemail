@@ -17,7 +17,7 @@ function ListSub(props) {
   const { classes } = props;
   return (
     <ListItem className={classes.sub} onClick={props.handleSubClick}>
-      <Checkbox checked={props.checked}/>
+      <Checkbox checked={props.checked} disableRipple/>
       <ListItemText primary={props.text}></ListItemText>
     </ListItem>
   );
