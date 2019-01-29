@@ -171,6 +171,7 @@ class App extends React.Component {
     this.openSubscribeModal = this.openSubscribeModal.bind(this);
     this.closeSubscribeModal = this.closeSubscribeModal.bind(this);
     this.handleSubscribe = this.handleSubscribe.bind(this);
+    this.handleReorder = this.handleReorder.bind(this);
   }
 
   componentDidMount() {
@@ -235,15 +236,17 @@ class App extends React.Component {
   }
 
   handleCategoryClick(e) {
-    const cat = e.currentTarget.childNodes[1].textContent;
-    const categories = JSON.parse(JSON.stringify(this.state.categories));
-    // Toggle checked value
-    categories[cat].checked = !categories[cat].checked;
-    // Set child subs' checked values to same
-    Object.keys(categories[cat].subs).forEach(sub => {
-      categories[cat].subs[sub] = categories[cat].checked;
-    });
-    this.setState({categories}, this.showTopPosts);
+    if (e.target.tagName !== 'svg') {
+      const cat = e.currentTarget.childNodes[1].textContent;
+      const categories = JSON.parse(JSON.stringify(this.state.categories));
+      // Toggle checked value
+      categories[cat].checked = !categories[cat].checked;
+      // Set child subs' checked values to same
+      Object.keys(categories[cat].subs).forEach(sub => {
+        categories[cat].subs[sub] = categories[cat].checked;
+      });
+      this.setState({categories}, this.showTopPosts);
+    }
   }
 
   handleSubClick(e) {
@@ -275,10 +278,36 @@ class App extends React.Component {
     axios.post('api/users', { email, preferences: this.state.categories });
   }
 
+  handleReorder(category, direction) {
+    const categories = JSON.parse(JSON.stringify(this.state.categories));
+    const currentOrder = categories[category].order;
+    const categoriesCount = Object.keys(categories).length;
+    if (currentOrder == 1 && direction === 'up' || currentOrder == categoriesCount && direction === 'down') {
+      return;
+    } else {
+      for (var key in categories) {
+        if (direction === 'up') {
+          if (categories[key].order === currentOrder - 1) {
+            categories[key].order += 1;
+            categories[category].order -= 1;
+          }
+        } else {
+          if (categories[key].order === currentOrder + 1) {
+            categories[key].order -= 1;
+            categories[category].order += 1;
+          }
+        }
+      }
+    };
+    this.setState({ categories }, this.showTopPosts);
+  }
+
   render () {
     const {classes} = this.props;
-    const categoriesAvailable = Object.entries(this.state.categories);
-    const categoriesSelected = Object.entries(this.state.display);
+    const categoriesAvailable = Object.entries(this.state.categories).sort((catA, catB) => catA[1].order - catB[1].order);
+    const categoriesSelected = Object.entries(this.state.display).sort((catA, catB) => {
+      return this.state.categories[catA[0]].order - this.state.categories[catB[0]].order
+    });
     let emailPreview = '';
     if (Object.keys(this.state.display).length) {
       emailPreview = <Email categoriesSelected={categoriesSelected} />
@@ -289,6 +318,7 @@ class App extends React.Component {
         params = {category[1]}
         handleCategoryClick = {this.handleCategoryClick}
         handleSubClick = {this.handleSubClick}
+        handleReorder = {this.handleReorder}
       />)
     return (
       <React.Fragment>

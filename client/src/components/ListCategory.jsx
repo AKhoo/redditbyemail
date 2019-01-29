@@ -6,6 +6,8 @@ import ListItem from '@material-ui/core/ListItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSub from './ListSub.jsx'
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 
 const styles = {
@@ -25,6 +27,11 @@ function ListCategory(props) {
       <ListItem className={classes.sub} onClick={props.handleCategoryClick}>
         <Checkbox checked={props.params.checked}/>
         <ListItemText primary={props.params.name}></ListItemText>
+        <div> 
+          <ExpandLess onClick={() => {props.handleReorder(props.params.name, 'up')}}/>
+          <ExpandMore onClick={() => {props.handleReorder(props.params.name, 'down')}}/>
+        </div>
+
       </ListItem>
       {Object.keys(props.params.subs).map(sub => 
         <ListSub 
