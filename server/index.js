@@ -1,8 +1,9 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var db = require('../db/index');
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('../db/index');
+const User = require('../db/user');
 
-var app = express();
+const app = express();
 
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/../client/dist'));
@@ -18,6 +19,7 @@ app.get('/api/posts', (req, res) => {
 app.post('/api/users', (req, res) => {
   console.log('post request received to add user');
   console.log(req.body);
+  User.add(req.body);
 });
 
 app.listen(3000, () => {

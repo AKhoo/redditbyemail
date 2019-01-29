@@ -275,7 +275,22 @@ class App extends React.Component {
   }
 
   handleSubscribe(email) {
-    axios.post('api/users', { email, preferences: this.state.categories });
+    let customCategories = [];
+    for (var cat in this.state.categories) {
+      if (this.state.categories[cat].checked) {
+        let subCollection = [];
+        for (var sub in this.state.categories[cat].subs) {
+          if (this.state.categories[cat].subs[sub]) {
+            subCollection.push(sub);
+          }
+        }
+        customCategories.push({ name: cat, subCollection: subCollection.join(' ') });
+      }
+    }
+    customCategories = customCategories.sort((catA, catB) => {
+      return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
+    });
+    axios.post('api/users', { email, customCategories });
   }
 
   handleReorder(category, direction) {
