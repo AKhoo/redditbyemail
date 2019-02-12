@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const serverless = require('serverless-http');
 const db = require('../db/index');
 const User = require('../db/user');
 
@@ -7,6 +8,7 @@ const app = express();
 
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/../client/dist'));
+
 
 // Gets posts for the default user for use on the web site
 app.get('/api/posts', (req, res) => {
@@ -26,3 +28,4 @@ app.listen(3000, () => {
   console.log('listening on port 3000!');
 });
 
+module.exports.handler = serverless(app);

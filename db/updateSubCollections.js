@@ -29,7 +29,7 @@ const updateSubCollection = (subCollId, updateNextSubColl) => {
       .catch(err => console.log(err));
   });
   dbOps.push(() => updateNextSubColl());
-  async.series(dbOps);
+  async.series(dbOps, () => process.exit(0));
 };
 
 // For each category, update subcollection posts with posts from unique subs
