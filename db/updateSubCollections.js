@@ -29,18 +29,18 @@ const updateSubCollection = (subCollId, updateNextSubColl) => {
       .catch(err => console.log(err));
   });
   dbOps.push(() => updateNextSubColl());
-  async.series(dbOps, () => process.exit(0));
+  async.series(dbOps);
 };
 
 // For each category, update subcollection posts with posts from unique subs
-const updateSubCollections = () => {
+const updateSubCollections = (callback) => {
   db.SubCollection.find({}, '_id')
     .then((subColls) => {
       const dbOps = [];
       subColls.forEach((subColl) => {
         dbOps.push(updateNextSubColl => updateSubCollection(subColl._id, updateNextSubColl));
       });
-      async.series(dbOps);
+      async.series(dbOps, () => callback());
     })
     .catch(err => console.log(err));
 };
