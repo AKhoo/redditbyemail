@@ -3,7 +3,7 @@ const Bottleneck = require('bottleneck');
 const db = require('./config');
 const updateSubCollections = require('./updateSubCollections');
 
-module.exports.handler = (event, context, callback) => {
+module.exports.handler = (event, context, doneFunc) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   const apiController = new Bottleneck({
@@ -55,7 +55,7 @@ module.exports.handler = (event, context, callback) => {
             console.log(successCount, subCount);
             if (successCount === subCount) {
               console.log('DONE');
-              updateSubCollections(callback);
+              updateSubCollections(doneFunc);
             }
           })
           .catch(err => console.log(err));

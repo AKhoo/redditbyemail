@@ -18,7 +18,7 @@ functions:
       - http: ANY /
       - http: 'ANY {proxy+}'
   sendEmails:
-    handler: server/emails.handler
+    handler: server/email.handler
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'

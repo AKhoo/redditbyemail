@@ -40,7 +40,7 @@ const updateSubCollections = (callback) => {
       subColls.forEach((subColl) => {
         dbOps.push(updateNextSubColl => updateSubCollection(subColl._id, updateNextSubColl));
       });
-      async.series(dbOps, () => callback());
+      async.series(dbOps, callback);
     })
     .catch(err => console.log(err));
 };
