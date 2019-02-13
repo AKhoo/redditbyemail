@@ -29,6 +29,7 @@
     "@material-ui/icons": "^3.0.2",
     "@material-ui/styles": "^3.0.0-alpha.9",
     "async": "^2.6.1",
+    "aws-sdk": "^2.401.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "bottleneck": "^2.15.3",

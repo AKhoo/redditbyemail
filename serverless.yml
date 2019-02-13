@@ -1,6 +1,6 @@
 # serverless.yml
 
-service: my-express-application
+service: redditByEmail
 
 package:
   individually: true

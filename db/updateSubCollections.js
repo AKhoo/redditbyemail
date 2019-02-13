@@ -1,6 +1,10 @@
-const db = require('./config');
 const async = require('async');
+const aws = require('aws-sdk');
+const db = require('./config');
 
+const lambda = new aws.Lambda({
+  region: 'us-east-1',
+});
 
 const updateSubCollection = (subCollId, updateNextSubColl) => {
   // For each sub in the collection...
@@ -40,7 +44,20 @@ const updateSubCollections = (callback) => {
       subColls.forEach((subColl) => {
         dbOps.push(updateNextSubColl => updateSubCollection(subColl._id, updateNextSubColl));
       });
-      async.series(dbOps, callback);
+      async.series(dbOps, () => {
+        lambda.invoke({
+          FunctionName: 'redditByEmail-dev-sendEmails',
+          InvocationType: 'Event',
+        }, (error, data) => {
+          if (error) {
+            console.log('error', error);
+          }
+          if (data.Payload) {
+            console.log('Lambda function invoked: redditByEmail-dev-sendEmails');
+          }
+          callback();
+        });
+      });
     })
     .catch(err => console.log(err));
 };

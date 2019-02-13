@@ -4,6 +4,7 @@ const db = require('./config');
 const updateSubCollections = require('./updateSubCollections');
 
 module.exports.handler = (event, context, doneFunc) => {
+  console.log('function starting');
   context.callbackWaitsForEmptyEventLoop = false;
 
   const apiController = new Bottleneck({
