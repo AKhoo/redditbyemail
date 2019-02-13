@@ -31,9 +31,6 @@ module.exports.handler = (event, context, doneFunc) => {
         User.getPostsBySubCollection(user.email, (allPosts) => {
           const randomSub = Object.keys(allPosts)[Math.floor(Math.random() * Object.keys(allPosts).length)];
           let titlePrefix = randomSub;
-          if (Object.keys(allPosts).length > 1) {
-            titlePrefix += ' & More';
-          }
           let randomTopPost = allPosts[randomSub][0].title;
           if (randomTopPost.length > 147) {
             randomTopPost = `${randomTopPost.slice(0, 148)}...`;
