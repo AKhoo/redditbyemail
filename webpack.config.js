@@ -1,4 +1,5 @@
 var path = require('path');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var SRC_DIR = path.join(__dirname, '/client/src');
 var DIST_DIR = path.join(__dirname, '/client/dist');
 
@@ -20,7 +21,7 @@ module.exports = [
           }
         }
       ]
-    }
+    },
   },
   {
     entry: `${SRC_DIR}/ssr.jsx`,

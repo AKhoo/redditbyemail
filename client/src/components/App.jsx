@@ -186,7 +186,7 @@ class App extends React.Component {
   }
 
   getPosts() {
-    axios.get(`/api/posts`)
+    axios.get(`https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api/posts`)
       .then(({ data }) => this.setState({ posts : data }, this.showTopPosts));
   }
   
@@ -303,7 +303,7 @@ class App extends React.Component {
     customCategories = customCategories.sort((catA, catB) => {
       return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
     });
-    axios.post('api/users', { email, customCategories });
+    axios.post('https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api/users', { email, customCategories });
   }
 
   handleReorder(category, direction) {

@@ -3,7 +3,8 @@
   "version": "0.5.0",
   "description": "",
   "scripts": {
-    "react-dev": "webpack -d --watch",
+    "build-dev": "webpack -d --watch",
+    "build-prod": "webpack -p --watch",
     "server-dev": "nodemon server/index.js",
     "reddit": "node db/pollReddit.js",
     "email": "node server/email.js",
@@ -22,7 +23,8 @@
     "eslint-plugin-import": "^2.15.0",
     "eslint-plugin-jsx-a11y": "^6.2.0",
     "eslint-plugin-react": "^7.12.4",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "webpack-bundle-analyzer": "^3.0.4"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.1",

@@ -15,10 +15,19 @@ functions:
   pollReddit:
     handler: db/pollReddit.handler
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
+      - schedule:
+        name: send-emails-daily
+        cron: cron(10 6 * * ? *)
   sendEmails:
     handler: server/email.handler
+  apiServer:
+    handler: server/index.handler
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http:
+          path: api/posts
+          method: get
+          cors: true
+      - http:
+          path: api/users
+          method: post
+          cors: true

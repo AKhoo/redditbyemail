@@ -37,10 +37,11 @@ User.getAll = (callback) => {
   User.find({}).then(data => callback(data));
 };
 
-User.add = (object) => {
+User.add = (object, callback) => {
   User.create(object)
     .then((userResult) => {
       console.log('Success - user create', userResult);
+      callback();
       if (object.customCategories) {
         // Create subCollections that don't exist
         object.customCategories.forEach((category) => {

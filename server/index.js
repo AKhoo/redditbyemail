@@ -14,6 +14,10 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.get('/api/posts', (req, res) => {
   console.log('get request received to fetch posts');
   db.getPosts('adriankhoo.ca+redditdefault@gmail.com', (posts) => {
+    res.set({
+      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    });
     res.send(posts);
   });
 });
@@ -21,7 +25,13 @@ app.get('/api/posts', (req, res) => {
 app.post('/api/users', (req, res) => {
   console.log('post request received to add user');
   console.log(req.body);
-  User.add(req.body);
+  User.add(req.body, () => {
+    res.set({
+      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    });
+    res.sendStatus(200);
+  });
 });
 
 app.listen(3000, () => {
