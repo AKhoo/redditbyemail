@@ -42,9 +42,13 @@ module.exports.handler = (event, context, doneFunc) => {
               <body>${html}</body>
             `);
           });
+
+          juicedEmail.headers = {
+            'X-SES-CONFIGURATION-SET': 'redditbyemail-daily-newsletter',
+          };
   
           const mailOptions = {
-            from: `Reddit By Email <adriankhoo.ca@gmail.com>`,
+            from: 'Reddit By Email <noreply@redditbyemail.com>',
             to: user.email,
             subject: `${titlePrefix}: ${randomTopPost}`,
             html: juicedEmail,
