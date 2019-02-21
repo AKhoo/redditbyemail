@@ -36,7 +36,7 @@ module.exports.handler = (event, context, doneFunc) => {
             randomTopPost = `${randomTopPost.slice(0, 148)}...`;
           }
           let juicedEmail = '';
-          styledEmail(Object.entries(allPosts), (html, css) => {
+          styledEmail(user.email, Object.entries(allPosts), (html, css) => {
             juicedEmail = juice(`
               <style id="jss-server-side">${css}</style>
               <body>${html}</body>
