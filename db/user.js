@@ -127,4 +127,10 @@ User.getPostsBySub = (email, callback) => {
     });
 };
 
+User.delete = (email, callback) => {
+  User.deleteOne({ email })
+    .then(callback)
+    .catch(err => console.log(err));
+}
+
 module.exports = User;

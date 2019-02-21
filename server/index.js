@@ -15,8 +15,8 @@ app.get('/api/posts', (req, res) => {
   console.log('get request received to fetch posts');
   db.getPosts('adriankhoo.ca+redditdefault@gmail.com', (posts) => {
     res.set({
-      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Credentials" : true,
     });
     res.send(posts);
   });
@@ -27,10 +27,18 @@ app.post('/api/users', (req, res) => {
   console.log(req.body);
   User.add(req.body, () => {
     res.set({
-      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Credentials" : true,
     });
     res.sendStatus(200);
+  });
+});
+
+app.get('/unsubscribe', (req, res) => {
+  const email = req.query.email.replace(' ', '+');
+  console.log(`delete request received to delete ${email}`);
+  User.delete(email, () => {
+    res.send('Unsubscribe request has been processed.');
   });
 });
 

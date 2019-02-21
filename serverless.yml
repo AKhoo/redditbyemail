@@ -31,3 +31,10 @@ functions:
           path: api/users
           method: post
           cors: true
+      - http:
+          path: unsubscribe
+          method: get
+          cors: true
+
+plugins:
+  - serverless-offline

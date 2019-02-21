@@ -23,6 +23,7 @@
     "eslint-plugin-import": "^2.15.0",
     "eslint-plugin-jsx-a11y": "^6.2.0",
     "eslint-plugin-react": "^7.12.4",
+    "serverless-offline": "^4.5.1",
     "webpack": "^2.2.1",
     "webpack-bundle-analyzer": "^3.0.4"
   },
