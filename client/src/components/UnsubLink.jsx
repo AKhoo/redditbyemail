@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   unsubLink: {
-    color: 'lightgrey',
+    color: rgba(0,0,0,0.54),
   },
 });
 

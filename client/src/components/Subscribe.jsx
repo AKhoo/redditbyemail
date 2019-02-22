@@ -15,10 +15,18 @@ class Subscribe extends React.Component {
       email: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   handleInputChange(e) {
     this.setState({email: e.target.value});
+  }
+
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      console.log('foo');
+      // this.props.handleSubscribe(this.state.email);
+    }
   }
 
   render() {
@@ -42,6 +50,7 @@ class Subscribe extends React.Component {
             fullWidth
             value={this.state.email}
             onChange={this.handleInputChange}
+            onKeyPress={this.handleKeyPress}
           />
         </DialogContent>
         <DialogActions>
