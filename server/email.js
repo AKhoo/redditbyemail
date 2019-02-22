@@ -10,7 +10,7 @@ module.exports.handler = (event, context, doneFunc) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   const sesController = new Bottleneck({
-    minTime: 1500,
+    minTime: 60,
   });
 
   const transport = nodemailer.createTransport({
@@ -29,11 +29,10 @@ module.exports.handler = (event, context, doneFunc) => {
     users.forEach((user) => {
       asyncOps.push((doneOp) => {
         User.getPostsBySubCollection(user.email, (allPosts) => {
-          const randomSub = Object.keys(allPosts)[Math.floor(Math.random() * Object.keys(allPosts).length)];
-          let titlePrefix = randomSub;
-          let randomTopPost = allPosts[randomSub][0].title;
-          if (randomTopPost.length > 147) {
-            randomTopPost = `${randomTopPost.slice(0, 148)}...`;
+          const firstSub = Object.keys(allPosts)[0];
+          let topPost = allPosts[firstSub][0].title;
+          if (topPost.length > 147) {
+            topPost = `${topPost.slice(0, 148)}...`;
           }
           let juicedEmail = '';
           styledEmail(user.email, Object.entries(allPosts), (html, css) => {
@@ -42,15 +41,14 @@ module.exports.handler = (event, context, doneFunc) => {
               <body>${html}</body>
             `);
           });
-
-          juicedEmail.headers = {
-            'X-SES-CONFIGURATION-SET': 'redditbyemail-daily-newsletter',
-          };
-  
+          
           const mailOptions = {
             from: 'Reddit By Email <noreply@redditbyemail.com>',
             to: user.email,
-            subject: `${titlePrefix}: ${randomTopPost}`,
+            subject: topPost,
+            headers: {
+              'X-SES-CONFIGURATION-SET': 'redditbyemail-daily-newsletter',
+            },
             html: juicedEmail,
           };
   

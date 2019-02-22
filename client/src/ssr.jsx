@@ -41,7 +41,7 @@ import UnsubLink from './components/UnsubLink.jsx';
           <Email categoriesSelected={categoriesSelected}/>
           <Typography variant="caption" align="center">
             You're receiving this email because you subscribed to Reddit By Email. To unsubscribe,
-            <UnsubLink email={`https://redditbyemail.com/unsubscribe?email=${emailAddress}`}></UnsubLink>
+            <UnsubLink email={`https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/unsubscribe?email=${emailAddress}`}></UnsubLink>
           </Typography>
         </MuiThemeProvider>
       </JssProvider>
