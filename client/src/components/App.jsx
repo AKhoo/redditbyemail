@@ -362,7 +362,7 @@ class App extends React.Component {
         <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe}/>
         {emailPreview}
       </main>
-      <Hidden smDown implementation='css'>
+      <Hidden mdDown implementation='css'>
         <Drawer variant ='permanent' anchor='right' open={true}>
           <List>
             <ListItem className={classes.checkAll} onClick={this.toggleAll}>
@@ -372,7 +372,7 @@ class App extends React.Component {
           {drawerContents}
         </Drawer>
       </Hidden>
-      <Hidden mdUp implementation='css'>
+      <Hidden lgUp implementation='css'>
         <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
           <List>
             <ListItem className={classes.checkAll} onClick={this.toggleAll}>

@@ -1,4 +1,3 @@
-import Email from './components/Email.jsx';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server'
 import { SheetsRegistry } from 'jss';
@@ -10,6 +9,8 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import Email from './components/Email.jsx';
+import UnsubLink from './components/UnsubLink.jsx';
 
 
  // Create a sheetsRegistry instance.
@@ -38,8 +39,10 @@ import Link from '@material-ui/core/Link';
           <Typography variant="h4" align="center">Reddit By Email</Typography>
           <Typography variant="subtitle2" align="center">{dateString}</Typography>
           <Email categoriesSelected={categoriesSelected}/>
-          <Typography variant="caption" align="center">You're receiving this email because you subscribed to Reddit By Email.</Typography>
-          <Link href={`/unsubscribe?email=${emailAddress}`}>Click here to unsubscribe.</Link>
+          <Typography variant="caption" align="center">
+            You're receiving this email because you subscribed to Reddit By Email. To unsubscribe,
+            <UnsubLink email={`https://redditbyemail.com/unsubscribe?email=${emailAddress}`}></UnsubLink>
+          </Typography>
         </MuiThemeProvider>
       </JssProvider>
     )
