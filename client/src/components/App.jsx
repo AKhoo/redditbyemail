@@ -101,6 +101,7 @@ class App extends React.Component {
           checked: true,
           order: 6,
           subs: {
+            'BestOf': true,
             'AskReddit': true,
             'WritingPrompts': true,
           }
@@ -135,6 +136,7 @@ class App extends React.Component {
           subs: {
             'Investing': true,
             'PersonalFinance': true,
+            'FinancialIndependence': true,
           }
         },
         'Self Improvement': {
