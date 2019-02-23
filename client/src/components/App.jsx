@@ -78,10 +78,19 @@ class App extends React.Component {
             'Space': true,
           }
         },
+        'Worth Watching': {
+          name: 'Worth Watching',
+          checked: true,
+          order: 4,
+          subs: {
+            'Documentaries': true,
+            'NetflixBestOf': true,
+          }
+        },
         'Quotes': {
           name: 'Quotes',
           checked: true,
-          order: 4,
+          order: 5,
           subs: {
             'Quotes': true,
             'QuotesPorn': true,
@@ -90,7 +99,7 @@ class App extends React.Component {
         'Entertaining Reads': {
           name: 'Entertaining Reads',
           checked: true,
-          order: 5,
+          order: 6,
           subs: {
             'AskReddit': true,
             'WritingPrompts': true,
@@ -99,7 +108,7 @@ class App extends React.Component {
         'JavaScript': {
           name: 'JavaScript',
           checked: true,
-          order: 6,
+          order: 7,
           subs: {
             'DailyProgrammer': true,
             'FrontEnd': true,
@@ -113,7 +122,7 @@ class App extends React.Component {
         'Life Hacks': {
           name: 'Life Hacks',
           checked: true,
-          order: 7,
+          order: 8,
           subs: {
             'Lifehacks': true,
             'LifeProTips': true,
@@ -122,7 +131,7 @@ class App extends React.Component {
         'Personal Finance': {
           name: 'Personal Finance',
           checked: true,
-          order: 8,
+          order: 9,
           subs: {
             'Investing': true,
             'PersonalFinance': true,
@@ -131,21 +140,12 @@ class App extends React.Component {
         'Self Improvement': {
           name: 'Self Improvement',
           checked: true,
-          order: 9,
+          order: 10,
           subs: {
             'GetMotivated': true,
             'Productivity': true,
             'SelfImprovement': true,
             'ZenHabits': true,
-          }
-        },
-        'Worth Watching': {
-          name: 'Worth Watching',
-          checked: true,
-          order: 10,
-          subs: {
-            'Documentaries': true,
-            'NetflixBestOf': true,
           }
         },
         'Recipes': {
