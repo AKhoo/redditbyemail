@@ -26,7 +26,36 @@ module.exports.handler = (event, context, doneFunc) => {
 
   transport.use('compile', htmlToText());
 
-  const emailUser = (emailAddress, callback) => {
+  const emailNewUser = (emailAddress, callback) => {
+    const mailOptions = {
+      from: 'Reddit By Email <noreply@redditbyemail.com>',
+      to: emailAddress,
+      subject: 'Did We Land in Your Spam? If Yes, Whitelist Us!',
+      text: `
+      Thank you for subscribing to Reddit By Email!
+        
+      If this email landed in your inbox, you're good to go; no further action is required.
+        
+      If this email landed in your Spam folder, please whitelist us in order to receive our emails properly going forward (for example, by marking this email as 'Not Spam').
+
+      We hope you'll enjoy Reddit By Email!
+
+      P.S. In case you're wondering, our emails are set to go out around 6am Pacific Time / 9am Eastern Time daily :)
+      `,
+    };
+
+    transport.sendMail(mailOptions, (error, response) => {
+      if (error) {
+        console.log(error);
+        callback();
+      } else {
+        console.log(`Email sent to ${emailAddress}`);
+        callback();
+      }
+    });
+  };
+
+  const emailNewsletter = (emailAddress, callback) => {
     User.getPostsBySubCollection(emailAddress, (allPosts) => {
       const firstSub = Object.keys(allPosts)[0];
       let topPost = allPosts[firstSub][0].title;
@@ -70,15 +99,17 @@ module.exports.handler = (event, context, doneFunc) => {
     });
   };
 
-  if (event.specificUser) {
-    emailUser(event.specificUser, doneFunc);
+  console.log(event);
+
+  if (event.newSubscriber) {
+    emailNewUser(event.newSubscriber, doneFunc);
   } else {
     // For each user, get their posts by sub and render email component  
     User.getAll((users) => {
       const asyncOps = [];
       users.forEach((user) => {
         asyncOps.push((doneOp) => {
-          emailUser(user.email, doneOp);
+          emailNewsletter(user.email, doneOp);
         });
       });
       series(asyncOps, doneFunc);

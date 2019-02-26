@@ -6,7 +6,14 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { withStyles } from '@material-ui/core/styles';
 
+
+const styles = theme => ({
+  dialogContentText: {
+    marginBottom: 15,
+  },
+});
 
 class Subscribe extends React.Component {
 
@@ -24,33 +31,34 @@ class Subscribe extends React.Component {
   }
 
   handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      console.log('foo');
-      // this.props.handleSubscribe(this.state.email);
+    if (e.key === 'Enter' && !this.props.subscribed) {
+      this.props.handleSubscribe(this.state.email);
     }
   }
 
   render() {
-    const { subscribed } = this.props;
+    const { subscribed, classes } = this.props;
     if (subscribed) {
       return (
         <Dialog
           open={this.props.subscribeModalOpen}
           onClose={this.props.closeSubscribeModal}
         >
-          <DialogTitle>An Important Note</DialogTitle>
+          <DialogTitle>Please Check Your Inbox Now</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Reddit By Email is likely to land in your Spam folder due to it's computer-generated content.
-              If you are not getting our emails, please check your spam folder and mark these emails as Not Spam.
+            <DialogContentText className={classes.dialogContentText}>
+              We sent you a test email but it's likely in your Spam folder. 
+            </DialogContentText>
+            <DialogContentText className={classes.dialogContentText}>
+              If you don't see an email within the next few minutes, go to your Spam folder and mark Reddit By Email as 'Not Spam'. 
+            </DialogContentText>
+            <DialogContentText className={classes.dialogContentText}>
+              Once you've whitelisted us, our emails should appear in your inbox!
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button color="default" onClick={this.props.closeSubscribeModal}>
-              Cancel
-            </Button>
             <Button variant="contained" color="primary" onClick={this.props.closeSubscribeModal}>
-              Got it!
+              I've Whitelisted Reddit By Email
             </Button>
           </DialogActions>
         </Dialog>
@@ -63,7 +71,7 @@ class Subscribe extends React.Component {
         >
           <DialogTitle>Subscribe</DialogTitle>
           <DialogContent>
-            <DialogContentText>
+            <DialogContentText className={classes.dialogContentText}>
               Enter your email below. 
               We'll send you the best of Reddit daily, with the categories and subreddits you selected!
             </DialogContentText>
@@ -93,4 +101,4 @@ class Subscribe extends React.Component {
   }
 }
 
-export default Subscribe;
+export default withStyles(styles)(Subscribe);

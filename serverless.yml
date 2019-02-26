@@ -16,11 +16,6 @@ functions:
     handler: db/pollReddit.handler
   sendEmails:
     handler: server/email.handler
-    events:
-      - http:
-          path: admin/sendEmails
-          method: get
-          cors: true
   apiServer:
     handler: server/index.handler
     events:

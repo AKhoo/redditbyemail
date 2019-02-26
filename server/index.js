@@ -30,24 +30,25 @@ app.post('/api/users', (req, res) => {
   console.log('post request received to add user');
   console.log(req.body);
   User.add(req.body, () => {
-    res.set({
-      "Access-Control-Allow-Origin" : "*",
-      "Access-Control-Allow-Credentials" : true,
-    });
+    console.log('User added. Next line is to invoke sendEmails function')
     lambda.invoke({
       FunctionName: 'redditByEmail-dev-sendEmails',
-      InvocationType: 'Event',
-      Payload: `{"specificUser" : "${req.body.email}"}`,
+      InvocationType: 'RequestResponse',
+      Payload: JSON.stringify({ newSubscriber: req.body.email }),
     }, (error, data) => {
       if (error) {
         console.log('error', error);
       }
       if (data.Payload) {
         console.log('Lambda function invoked: redditByEmail-dev-sendEmails');
+        res.set({
+          "Access-Control-Allow-Origin" : "*",
+          "Access-Control-Allow-Credentials" : true,
+        });
+        res.sendStatus(200);
+        console.log('Sent 200 status.');
       }
-      callback();
     });
-    res.sendStatus(200);
   });
 });
 
