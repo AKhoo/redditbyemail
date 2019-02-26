@@ -42,6 +42,7 @@ class App extends React.Component {
     super(props);
     this.state = { 
       email: '',
+      subscribed: false,
       categories: {
         'Interesting Facts': {
           name: 'Interesting Facts',
@@ -87,23 +88,23 @@ class App extends React.Component {
             'NetflixBestOf': true,
           }
         },
-        'Quotes': {
-          name: 'Quotes',
-          checked: true,
-          order: 5,
-          subs: {
-            'Quotes': true,
-            'QuotesPorn': true,
-          }
-        },
         'Entertaining Reads': {
           name: 'Entertaining Reads',
           checked: true,
-          order: 6,
+          order: 5,
           subs: {
             'BestOf': true,
             'AskReddit': true,
             'WritingPrompts': true,
+          }
+        },
+        'Quotes': {
+          name: 'Quotes',
+          checked: true,
+          order: 6,
+          subs: {
+            'Quotes': true,
+            'QuotesPorn': true,
           }
         },
         'JavaScript': {
@@ -305,7 +306,8 @@ class App extends React.Component {
     customCategories = customCategories.sort((catA, catB) => {
       return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
     });
-    axios.post('https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api/users', { email, customCategories });
+    axios.post('https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api/users', { email, customCategories })
+      .then(() => this.setState({ subscribed: true }))
   }
 
   handleReorder(category, direction) {
@@ -361,7 +363,7 @@ class App extends React.Component {
         <Typography variant="h6"> 
           Preview below, then <Button variant="outlined" onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" onClick={this.openSubscribeModal}>subscribe</Button>
         </Typography>
-        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe}/>
+        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
         {emailPreview}
       </main>
       <Hidden mdDown implementation='css'>

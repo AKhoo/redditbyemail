@@ -14,12 +14,13 @@ provider:
 functions:
   pollReddit:
     handler: db/pollReddit.handler
-    events:
-      - schedule:
-        name: send-emails-daily
-        cron: cron(10 6 * * ? *)
   sendEmails:
     handler: server/email.handler
+    events:
+      - http:
+          path: admin/sendEmails
+          method: get
+          cors: true
   apiServer:
     handler: server/index.handler
     events:

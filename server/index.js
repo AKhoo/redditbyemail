@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const serverless = require('serverless-http');
+const aws = require('aws-sdk');
 const db = require('../db/index');
 const User = require('../db/user');
 
@@ -9,6 +10,9 @@ const app = express();
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/../client/dist'));
 
+const lambda = new aws.Lambda({
+  region: 'us-east-1',
+});
 
 // Gets posts for the default user for use on the web site
 app.get('/api/posts', (req, res) => {
@@ -30,6 +34,19 @@ app.post('/api/users', (req, res) => {
       "Access-Control-Allow-Origin" : "*",
       "Access-Control-Allow-Credentials" : true,
     });
+    lambda.invoke({
+      FunctionName: 'redditByEmail-dev-sendEmails',
+      InvocationType: 'Event',
+      Payload: `{"specificUser" : "${req.body.email}"}`,
+    }, (error, data) => {
+      if (error) {
+        console.log('error', error);
+      }
+      if (data.Payload) {
+        console.log('Lambda function invoked: redditByEmail-dev-sendEmails');
+      }
+      callback();
+    });
     res.sendStatus(200);
   });
 });
@@ -42,8 +59,8 @@ app.get('/unsubscribe', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('listening on port 3000!');
+app.listen(3001, () => {
+  console.log('listening on port 3001!');
 });
 
 module.exports.handler = serverless(app);
