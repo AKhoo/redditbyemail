@@ -9,6 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
+import Link from '@material-ui/core/Link';
 import { withStyles } from '@material-ui/core/styles';
 import ListCategory from './ListCategory.jsx'
 import Subscribe from './Subscribe.jsx'
@@ -19,6 +20,7 @@ const styles = theme => ({
   layout: {
     marginTop: theme.spacing.unit * 4,
     marginLeft: theme.spacing.unit * 6,
+    marginBottom: theme.spacing.unit * 6,
     [theme.breakpoints.up('md')]: {
       width: 750,
     }
@@ -34,6 +36,13 @@ const styles = theme => ({
     paddingLeft: 15,
     fontSize: '0.7 rem',
     color: 'grey'
+  },
+  footerText: {
+    color: 'grey'
+  },
+  heroButton: {
+    marginLeft: 5,
+    marginRight: 5
   }
 });
 
@@ -358,13 +367,14 @@ class App extends React.Component {
       <main className={classes.layout}>
         <Typography variant="h1">Reddit By Email</Typography>
         <Typography variant="h6" className={classes.subheader}>
-          Get the most interesting posts from Reddit, delivered to your inbox daily 
+        Get inspired & intrigued with top posts from Reddit, delivered daily
         </Typography>
         <Typography variant="h6"> 
-          Preview below, then <Button variant="outlined" onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" onClick={this.openSubscribeModal}>subscribe</Button>
+          Preview below, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
         </Typography>
         <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
         {emailPreview}
+        <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
       </main>
       <Hidden mdDown implementation='css'>
         <Drawer variant ='permanent' anchor='right' open={true}>

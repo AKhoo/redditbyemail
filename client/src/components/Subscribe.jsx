@@ -13,6 +13,10 @@ const styles = theme => ({
   dialogContentText: {
     marginBottom: 15,
   },
+  dialogActions: {
+    marginBottom: 20,
+    marginRight: 20
+  }
 });
 
 class Subscribe extends React.Component {
@@ -56,7 +60,7 @@ class Subscribe extends React.Component {
               Once you've whitelisted us, our emails should appear in your inbox!
             </DialogContentText>
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dialogActions}>
             <Button variant="contained" color="primary" onClick={this.props.closeSubscribeModal}>
               I've Whitelisted Reddit By Email
             </Button>
@@ -87,7 +91,7 @@ class Subscribe extends React.Component {
               onKeyPress={this.handleKeyPress}
             />
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dialogActions}>
             <Button color="default" onClick={this.props.closeSubscribeModal}>
               Cancel
             </Button>
