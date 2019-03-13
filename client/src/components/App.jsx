@@ -367,7 +367,7 @@ class App extends React.Component {
       <main className={classes.layout}>
         <Typography variant="h1">Reddit By Email</Typography>
         <Typography variant="h6" className={classes.subheader}>
-        Get inspired & intrigued with top posts from Reddit, delivered daily
+        Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
         </Typography>
         <Typography variant="h6"> 
           Preview below, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
