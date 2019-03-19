@@ -49,11 +49,12 @@ module.exports.handler = (event, context, doneFunc) => {
     transport.sendMail(mailOptions, (error, response) => {
       if (error) {
         console.log(error);
+        callback();
       } else {
         console.log(`Email sent to ${emailAddress}`);
+        callback();
       }
     });
-    callback();
   };
 
   const emailNewsletter = (emailAddress, callback) => {
@@ -94,12 +95,13 @@ module.exports.handler = (event, context, doneFunc) => {
         transport.sendMail(mailOptions, (error, response) => {
           if (error) {
             console.log(error);
+            callback();
           } else {
             console.log(`Email sent to ${emailAddress}`);
+            callback();
           }
         });
       });
-      callback();
     });
   };
 
