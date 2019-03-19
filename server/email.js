@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const juice = require('juice');
 const Bottleneck = require('bottleneck');
 const series = require('async/series');
+const aws = require('aws-sdk');
 const htmlToText = require('nodemailer-html-to-text').htmlToText;
 const env = require('../.env');
 const User = require('../db/user');
@@ -27,31 +28,52 @@ module.exports.handler = (event, context, doneFunc) => {
   transport.use('compile', htmlToText());
 
   const emailNewUser = (emailAddress, callback) => {
-    const mailOptions = {
-      from: 'Reddit By Email <noreply@redditbyemail.com>',
-      to: emailAddress,
-      subject: 'Did We Land in Your Spam? If Yes, Whitelist Us',
-      text: `
-      Thank you for subscribing to Reddit By Email!
-        
-      If this email landed in your primary Inbox, you're good to go; no further action is required.
-        
-      If this email landed in your Spam folder, please whitelist us in order to receive our emails properly going forward (for example, by marking this email as 'Not Spam').
+    const sender = 'Reddit By Email <noreply@redditbyemail.com>';
+    const recipient = emailAddress;
+    const subject = 'Did We Land in Your Spam? If Yes, Whitelist Us';
+    const body_text = `
+    Thank you for subscribing to Reddit By Email!
+      
+    If this email landed in your primary Inbox, you're good to go; no further action is required.
+      
+    If this email landed in your Spam folder, please whitelist us in order to receive our emails properly going forward (for example, by marking this email as 'Not Spam').
 
-      If you're using Gmail and this email landed in your Promotions tab, please drag our email to your Primary tab if you would like us to appear there instead.
+    If you're using Gmail and this email landed in your Promotions tab, please drag our email to your Primary tab if you would like us to appear there instead.
 
-      We hope you'll enjoy Reddit By Email!
+    We hope you'll enjoy Reddit By Email!
 
-      P.S. In case you're wondering, our emails are set to go out around 6am Pacific Time / 9am Eastern Time daily :)
-      `,
+    P.S. In case you're wondering, our emails are set to go out around 6am Pacific Time / 9am Eastern Time daily :)
+    `;
+    const charset = 'UTF-8';
+    const ses = new aws.SES();
+    const params = {
+      Source: sender, 
+      Destination: { 
+        ToAddresses: [
+          recipient
+        ],
+      },
+      Message: {
+        Subject: {
+          Data: subject,
+          Charset: charset
+        },
+        Body: {
+          Text: {
+            Data: body_text,
+            Charset: charset 
+          },
+        }
+      },
     };
 
-    transport.sendMail(mailOptions, (error, response) => {
-      if (error) {
-        console.log(error);
+    ses.sendEmail(params, function(err, data) {
+      // If something goes wrong, print an error message.
+      if(err) {
+        console.log(err.message);
         callback();
       } else {
-        console.log(`Email sent to ${emailAddress}`);
+        console.log(`Email sent to ${emailAddress}. Message ID: ${data.MessageId}.`);
         callback();
       }
     });
