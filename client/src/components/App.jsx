@@ -15,7 +15,6 @@ import ListCategory from './ListCategory.jsx'
 import Subscribe from './Subscribe.jsx'
 import Email from './Email.jsx'
 
-
 const styles = theme => ({
   layout: {
     marginTop: theme.spacing.unit * 4,
@@ -176,6 +175,7 @@ class App extends React.Component {
       subscribeModalOpen: false,
       checkAll: false,
     }
+    this.apiUrl = window.location.host === 'redditbyemail.com' ? 'https://z2dxzzhyca.execute-api.us-east-1.amazonaws.com/prod/api' : 'https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api';
     this.handleCategoryClick = this.handleCategoryClick.bind(this);
     this.handleSubClick = this.handleSubClick.bind(this);
     this.showTopPosts = this.showTopPosts.bind(this);
@@ -198,7 +198,7 @@ class App extends React.Component {
   }
 
   getPosts() {
-    axios.get(`https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api/posts`)
+    axios.get(`${this.apiUrl}/posts`)
       .then(({ data }) => this.setState({ posts : data }, this.showTopPosts));
   }
   
@@ -315,7 +315,7 @@ class App extends React.Component {
     customCategories = customCategories.sort((catA, catB) => {
       return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
     });
-    axios.post('https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api/users', { email, customCategories })
+    axios.post(`${this.apiUrl}/users`, { email, customCategories })
       .then(() => this.setState({ subscribed: true }))
   }
 

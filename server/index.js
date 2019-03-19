@@ -17,6 +17,7 @@ const lambda = new aws.Lambda({
 // Gets posts for the default user for use on the web site
 app.get('/api/posts', (req, res) => {
   console.log('get request received to fetch posts');
+  console.log('process.env.mongoUrl:', process.env.mongoUrl);
   db.getPosts('adriankhoo.ca+redditdefault@gmail.com', (posts) => {
     res.set({
       "Access-Control-Allow-Origin" : "*",

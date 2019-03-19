@@ -7,7 +7,7 @@ const lambda = new aws.Lambda({
 });
 
 const updateSubCollection = (subCollId, updateNextSubColl) => {
-  // For each sub in the collection...
+  // For each sub in the collection...  
   console.log('Updating subCollection', subCollId);
   const subs = subCollId.split(' ');
   let allPosts = [];
@@ -46,17 +46,18 @@ const updateSubCollections = (callback) => {
       });
       async.series(dbOps, () => {
         lambda.invoke({
-          FunctionName: 'redditByEmail-dev-sendEmails',
+          FunctionName: process.env.sendEmailsFunction || 'redditByEmail-dev-sendEmails',
           InvocationType: 'Event',
         }, (error, data) => {
           if (error) {
             console.log('error', error);
           }
           if (data.Payload) {
-            console.log('Lambda function invoked: redditByEmail-dev-sendEmails');
+            console.log(`Lambda function invoked: ${process.env.sendEmailsFunction || 'redditByEmail-dev-sendEmails'}`);
           }
-          callback();
+          // callback();
         });
+        callback();
       });
     })
     .catch(err => console.log(err));

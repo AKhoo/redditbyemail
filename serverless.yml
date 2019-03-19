@@ -8,14 +8,21 @@ package:
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   region: us-east-1
+  environment:
+    mongoUrl: ${file(./config.${self:provider.stage}.json):mongoUrl}
+    sendEmailsFunction: ${file(./config.${self:provider.stage}.json):sendEmailsFunction}
 
 functions:
   pollReddit:
     handler: db/pollReddit.handler
+    memorySize: 512
+    timeout: 300
   sendEmails:
     handler: server/email.handler
+    memorySize: 512
+    timeout: 300
   apiServer:
     handler: server/index.handler
     events:
