@@ -55,9 +55,8 @@ const updateSubCollections = (callback) => {
           if (data.Payload) {
             console.log(`Lambda function invoked: ${process.env.sendEmailsFunction || 'redditByEmail-dev-sendEmails'}`);
           }
-          // callback();
+          callback();
         });
-        callback();
       });
     })
     .catch(err => console.log(err));
