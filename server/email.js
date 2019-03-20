@@ -1,10 +1,8 @@
-const nodemailer = require('nodemailer');
 const juice = require('juice');
 const Bottleneck = require('bottleneck');
 const series = require('async/series');
 const aws = require('aws-sdk');
-const htmlToText = require('nodemailer-html-to-text').htmlToText;
-const env = require('../.env');
+const htmlToText = require('html-to-text');
 const User = require('../db/user');
 const styledEmail = require('../client/dist/bundle-ssr');
 
@@ -15,47 +13,32 @@ module.exports.handler = (event, context, doneFunc) => {
     minTime: 60,
   });
 
-  const transport = nodemailer.createTransport({
-    host: 'email-smtp.us-west-2.amazonaws.com',
-    secureConnection: true,
-    port: 465,
-    auth: {
-      user: env.smtpUser,
-      pass: env.smtpPassword,
-    },
-  });
-
-  transport.use('compile', htmlToText());
-
   const emailNewUser = (emailAddress, callback) => {
-    const sender = 'Reddit By Email <noreply@redditbyemail.com>';
-    const recipient = emailAddress;
-    const subject = 'Did We Land in Your Spam? If Yes, Whitelist Us';
     const body_text = `
-    Thank you for subscribing to Reddit By Email!
-      
-    If this email landed in your primary Inbox, you're good to go; no further action is required.
-      
-    If this email landed in your Spam folder, please whitelist us in order to receive our emails properly going forward (for example, by marking this email as 'Not Spam').
+Thank you for subscribing to Reddit By Email!
+  
+If this email landed in your primary Inbox, you're good to go; no further action is required.
+  
+If this email landed in your Spam folder, please whitelist us in order to receive our emails properly going forward (for example, by marking this email as 'Not Spam').
 
-    If you're using Gmail and this email landed in your Promotions tab, please drag our email to your Primary tab if you would like us to appear there instead.
+If you're using Gmail and this email landed in your Promotions tab, please drag our email to your Primary tab if you would like us to appear there instead.
 
-    We hope you'll enjoy Reddit By Email!
+We hope you'll enjoy Reddit By Email!
 
-    P.S. In case you're wondering, our emails are set to go out around 6am Pacific Time / 9am Eastern Time daily :)
+P.S. In case you're wondering, our emails are set to go out around 6am Pacific Time / 9am Eastern Time daily :)
     `;
     const charset = 'UTF-8';
-    const ses = new aws.SES();
+    const ses = new aws.SES({
+      region: 'us-west-2'
+    });
     const params = {
-      Source: sender, 
+      Source: 'Reddit By Email <noreply@redditbyemail.com>', 
       Destination: { 
-        ToAddresses: [
-          recipient
-        ],
+        ToAddresses: [emailAddress],
       },
       Message: {
         Subject: {
-          Data: subject,
+          Data: 'Did We Land in Your Spam? If Yes, Whitelist Us',
           Charset: charset
         },
         Body: {
@@ -68,7 +51,6 @@ module.exports.handler = (event, context, doneFunc) => {
     };
 
     ses.sendEmail(params, function(err, data) {
-      // If something goes wrong, print an error message.
       if(err) {
         console.log(err.message);
         callback();
@@ -102,24 +84,42 @@ module.exports.handler = (event, context, doneFunc) => {
         `);
         console.log('CSS injection via Juice complete. Next step is to send email.')
       });
-      
-      const mailOptions = {
-        from: 'Reddit By Email <noreply@redditbyemail.com>',
-        to: emailAddress,
-        subject: topPost,
-        headers: {
-          'X-SES-CONFIGURATION-SET': 'redditbyemail-daily-newsletter',
+
+      const charset = 'UTF-8';
+      const ses = new aws.SES({
+        region: 'us-west-2'
+      });
+      const params = {
+        Source: 'Reddit By Email <noreply@redditbyemail.com>', 
+        Destination: { 
+          ToAddresses: [emailAddress],
         },
-        html: juicedEmail,
+        Message: {
+          Subject: {
+            Data: topPost,
+            Charset: charset
+          },
+          Body: {
+            Text: {
+              Data: htmlToText.fromString(juicedEmail),
+              Charset: charset 
+            },
+            Html: {
+              Data: juicedEmail,
+              Charset: charset
+            }
+          }
+        },
+        ConfigurationSetName: 'redditbyemail-daily-newsletter',
       };
 
       sesController.schedule(() => {
-        transport.sendMail(mailOptions, (error, response) => {
-          if (error) {
-            console.log(error);
+        ses.sendEmail(params, function(err, data) {
+          if(err) {
+            console.log(err.message);
             callback();
           } else {
-            console.log(`Email sent to ${emailAddress}`);
+            console.log(`Email sent to ${emailAddress}. Message ID: ${data.MessageId}.`);
             callback();
           }
         });
