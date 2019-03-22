@@ -29,7 +29,7 @@ P.S. In case you're wondering, our emails are set to go out around 6am Pacific T
     `;
     const charset = 'UTF-8';
     const ses = new aws.SES({
-      region: 'us-west-2'
+      region: 'us-east-1'
     });
     const params = {
       Source: 'Reddit By Email <noreply@redditbyemail.com>', 
