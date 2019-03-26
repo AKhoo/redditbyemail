@@ -13,6 +13,7 @@ provider:
   environment:
     mongoUrl: ${file(./config.${self:provider.stage}.json):mongoUrl}
     sendEmailsFunction: ${file(./config.${self:provider.stage}.json):sendEmailsFunction}
+    apiRoot: ${file(./config.${self:provider.stage}.json):apiRoot}
 
 functions:
   pollReddit:

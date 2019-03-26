@@ -8,9 +8,7 @@ import {
   createGenerateClassName,
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import Email from './components/Email.jsx';
-import UnsubLink from './components/UnsubLink.jsx';
 
 
  // Create a sheetsRegistry instance.
@@ -39,10 +37,6 @@ import UnsubLink from './components/UnsubLink.jsx';
           <Typography variant="h4" align="center">Reddit By Email</Typography>
           <Typography variant="subtitle2" align="center">{dateString}</Typography>
           <Email categoriesSelected={categoriesSelected}/>
-          <Typography variant="caption" align="center">
-            You're receiving this email because you subscribed to Reddit By Email. To unsubscribe,
-            <UnsubLink email={`https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/unsubscribe?email=${emailAddress}`}></UnsubLink>
-          </Typography>
         </MuiThemeProvider>
       </JssProvider>
     )

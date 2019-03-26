@@ -79,7 +79,13 @@ P.S. In case you're wondering, our emails are set to go out around 6am Pacific T
           <head>
             <style id="jss-server-side">${css}</style>
           </head>
-          <body>${html}</body>
+          <body>
+            ${html}
+            <p style="text-align: center; color: lightgray;">
+              You're receiving this email because you subscribed to Reddit By Email. 
+              To unsubscribe, <a href=${process.env.apiRoot}/unsubscribe?email=${emailAddress} style="color: lightgray;">click here</a>.
+            </p>
+          </body>
           </html>
         `);
         console.log('CSS injection via Juice complete. Next step is to send email.')
