@@ -57,7 +57,7 @@ module.exports.handler = (event, context, doneFunc) => {
             console.log(successCount, subCount);
             if (successCount === subCount) {
               console.log('DONE');
-              testQueues();
+              queueSubscribers();
               // TEMPORARILY DISABLED:
               // updateSubCollections(doneFunc);
             }

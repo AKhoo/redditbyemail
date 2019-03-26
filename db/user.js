@@ -37,6 +37,10 @@ User.getAll = (callback) => {
   User.find({}).then(data => callback(data));
 };
 
+User.getEmailList = (callback) => {
+  User.find({}, 'email').then(data => callback(data));
+};
+
 User.add = (object, callback) => {
   User.create(object)
     .then((userResult) => {
