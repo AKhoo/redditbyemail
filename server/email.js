@@ -1,6 +1,5 @@
 const juice = require('juice');
-const Bottleneck = require('bottleneck');
-const series = require('async/series');
+const parallelLimit = require('async/parallelLimit');
 const aws = require('aws-sdk');
 const htmlToText = require('html-to-text');
 const User = require('../db/user');
@@ -8,10 +7,6 @@ const styledEmail = require('../client/dist/bundle-ssr');
 
 module.exports.handler = (event, context, doneFunc) => {
   context.callbackWaitsForEmptyEventLoop = false;
-
-  const sesController = new Bottleneck({
-    minTime: 60,
-  });
 
   const emailNewUser = (emailAddress, callback) => {
     const body_text = `
@@ -119,16 +114,14 @@ P.S. In case you're wondering, our emails are set to go out around 6am Pacific T
         ConfigurationSetName: 'redditbyemail-daily-newsletter',
       };
 
-      sesController.schedule(() => {
-        ses.sendEmail(params, function(err, data) {
-          if(err) {
-            console.log(err.message);
-            callback();
-          } else {
-            console.log(`Email sent to ${emailAddress}. Message ID: ${data.MessageId}.`);
-            callback();
-          }
-        });
+      ses.sendEmail(params, function(err, data) {
+        if(err) {
+          console.log(err.message);
+          callback();
+        } else {
+          console.log(`Email sent to ${emailAddress}. Message ID: ${data.MessageId}.`);
+          callback();
+        }
       });
     });
   };
@@ -146,7 +139,7 @@ P.S. In case you're wondering, our emails are set to go out around 6am Pacific T
           emailNewsletter(user.email, doneOp);
         });
       });
-      series(asyncOps, doneFunc);
+      parallelLimit(asyncOps, 20, doneFunc);
     });
   }
 };

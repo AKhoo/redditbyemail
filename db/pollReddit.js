@@ -2,7 +2,6 @@ const axios = require('axios');
 const Bottleneck = require('bottleneck');
 const db = require('./config');
 const updateSubCollections = require('./updateSubCollections');
-const testQueues = require('./queueSubscribers');
 
 module.exports.handler = (event, context, doneFunc) => {
   console.log('function starting');
@@ -27,7 +26,7 @@ module.exports.handler = (event, context, doneFunc) => {
   let subCount;
   db.Sub.find({})
     .then((subs) => {
-      subCount = 1 // subs.length;
+      subCount = subs.length;
       for (let i = 0; i < subCount; i += 1) {
         getPostsFromReddit(subs[i]._id)
           .then(({ data }) => {
@@ -57,9 +56,7 @@ module.exports.handler = (event, context, doneFunc) => {
             console.log(successCount, subCount);
             if (successCount === subCount) {
               console.log('DONE');
-              queueSubscribers();
-              // TEMPORARILY DISABLED:
-              // updateSubCollections(doneFunc);
+              updateSubCollections(doneFunc);
             }
           })
           .catch(err => console.log(err));
