@@ -1,9 +1,13 @@
-const db = require('./config');
 const async = require('async');
+const aws = require('aws-sdk');
+const db = require('./config');
 
+const lambda = new aws.Lambda({
+  region: 'us-east-1',
+});
 
 const updateSubCollection = (subCollId, updateNextSubColl) => {
-  // For each sub in the collection...
+  // For each sub in the collection...  
   console.log('Updating subCollection', subCollId);
   const subs = subCollId.split(' ');
   let allPosts = [];
@@ -33,14 +37,27 @@ const updateSubCollection = (subCollId, updateNextSubColl) => {
 };
 
 // For each category, update subcollection posts with posts from unique subs
-const updateSubCollections = () => {
+const updateSubCollections = (callback) => {
   db.SubCollection.find({}, '_id')
     .then((subColls) => {
       const dbOps = [];
       subColls.forEach((subColl) => {
         dbOps.push(updateNextSubColl => updateSubCollection(subColl._id, updateNextSubColl));
       });
-      async.series(dbOps);
+      async.series(dbOps, () => {
+        lambda.invoke({
+          FunctionName: process.env.sendEmailsFunction || 'redditByEmail-dev-sendEmails',
+          InvocationType: 'Event',
+        }, (error, data) => {
+          if (error) {
+            console.log('error', error);
+          }
+          if (data.Payload) {
+            console.log(`Lambda function invoked: ${process.env.sendEmailsFunction || 'redditByEmail-dev-sendEmails'}`);
+          }
+          callback();
+        });
+      });
     })
     .catch(err => console.log(err));
 };

@@ -37,10 +37,15 @@ User.getAll = (callback) => {
   User.find({}).then(data => callback(data));
 };
 
-User.add = (object) => {
+User.getEmailList = (callback) => {
+  User.find({}, 'email').then(data => callback(data));
+};
+
+User.add = (object, callback) => {
   User.create(object)
     .then((userResult) => {
       console.log('Success - user create', userResult);
+      callback();
       if (object.customCategories) {
         // Create subCollections that don't exist
         object.customCategories.forEach((category) => {
@@ -125,5 +130,11 @@ User.getPostsBySub = (email, callback) => {
       async.series(dbOps);
     });
 };
+
+User.delete = (email, callback) => {
+  User.deleteOne({ email })
+    .then(callback)
+    .catch(err => console.log(err));
+}
 
 module.exports = User;

@@ -50,7 +50,7 @@ function Category(props) {
           <div key = {'div_post_' + post._id} className = {classes.post}>
             <Link variant="subtitle1" className={classes.postTitle} href={post.url} target="_blank">{post.title}</Link>
             <Link href={`https://www.reddit.com${post.permalink}`} target="_blank">
-              <img src='https://s3-us-west-1.amazonaws.com/redditbyemail/forumicon.png' className={classes.icon}/>
+              <img src='https://s3.amazonaws.com/redditbyemail.com/forumicon.png' alt="discussion icon" className={classes.icon}/>
             </Link>
             <Divider className={classes.divider} light={true}/>
           </div>

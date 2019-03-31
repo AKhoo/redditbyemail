@@ -9,16 +9,17 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
+import Link from '@material-ui/core/Link';
 import { withStyles } from '@material-ui/core/styles';
 import ListCategory from './ListCategory.jsx'
 import Subscribe from './Subscribe.jsx'
 import Email from './Email.jsx'
 
-
 const styles = theme => ({
   layout: {
     marginTop: theme.spacing.unit * 4,
     marginLeft: theme.spacing.unit * 6,
+    marginBottom: theme.spacing.unit * 6,
     [theme.breakpoints.up('md')]: {
       width: 750,
     }
@@ -34,6 +35,13 @@ const styles = theme => ({
     paddingLeft: 15,
     fontSize: '0.7 rem',
     color: 'grey'
+  },
+  footerText: {
+    color: 'grey'
+  },
+  heroButton: {
+    marginLeft: 5,
+    marginRight: 5
   }
 });
 
@@ -42,6 +50,7 @@ class App extends React.Component {
     super(props);
     this.state = { 
       email: '',
+      subscribed: false,
       categories: {
         'Interesting Facts': {
           name: 'Interesting Facts',
@@ -78,13 +87,13 @@ class App extends React.Component {
             'Space': true,
           }
         },
-        'Quotes': {
-          name: 'Quotes',
+        'Worth Watching': {
+          name: 'Worth Watching',
           checked: true,
           order: 4,
           subs: {
-            'Quotes': true,
-            'QuotesPorn': true,
+            'Documentaries': true,
+            'NetflixBestOf': true,
           }
         },
         'Entertaining Reads': {
@@ -92,14 +101,24 @@ class App extends React.Component {
           checked: true,
           order: 5,
           subs: {
+            'BestOf': true,
             'AskReddit': true,
             'WritingPrompts': true,
+          }
+        },
+        'Quotes': {
+          name: 'Quotes',
+          checked: true,
+          order: 6,
+          subs: {
+            'Quotes': true,
+            'QuotesPorn': true,
           }
         },
         'JavaScript': {
           name: 'JavaScript',
           checked: true,
-          order: 6,
+          order: 7,
           subs: {
             'DailyProgrammer': true,
             'FrontEnd': true,
@@ -113,7 +132,7 @@ class App extends React.Component {
         'Life Hacks': {
           name: 'Life Hacks',
           checked: true,
-          order: 7,
+          order: 8,
           subs: {
             'Lifehacks': true,
             'LifeProTips': true,
@@ -122,30 +141,22 @@ class App extends React.Component {
         'Personal Finance': {
           name: 'Personal Finance',
           checked: true,
-          order: 8,
+          order: 9,
           subs: {
             'Investing': true,
             'PersonalFinance': true,
+            'FinancialIndependence': true,
           }
         },
         'Self Improvement': {
           name: 'Self Improvement',
           checked: true,
-          order: 9,
+          order: 10,
           subs: {
             'GetMotivated': true,
             'Productivity': true,
             'SelfImprovement': true,
             'ZenHabits': true,
-          }
-        },
-        'Worth Watching': {
-          name: 'Worth Watching',
-          checked: true,
-          order: 10,
-          subs: {
-            'Documentaries': true,
-            'NetflixBestOf': true,
           }
         },
         'Recipes': {
@@ -164,6 +175,7 @@ class App extends React.Component {
       subscribeModalOpen: false,
       checkAll: false,
     }
+    this.apiUrl = window.location.host === 'redditbyemail.com' ? 'https://z2dxzzhyca.execute-api.us-east-1.amazonaws.com/prod/api' : 'https://vsjd9kzss0.execute-api.us-east-1.amazonaws.com/dev/api';
     this.handleCategoryClick = this.handleCategoryClick.bind(this);
     this.handleSubClick = this.handleSubClick.bind(this);
     this.showTopPosts = this.showTopPosts.bind(this);
@@ -186,7 +198,7 @@ class App extends React.Component {
   }
 
   getPosts() {
-    axios.get(`/api/posts`)
+    axios.get(`${this.apiUrl}/posts`)
       .then(({ data }) => this.setState({ posts : data }, this.showTopPosts));
   }
   
@@ -303,7 +315,8 @@ class App extends React.Component {
     customCategories = customCategories.sort((catA, catB) => {
       return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
     });
-    axios.post('api/users', { email, customCategories });
+    axios.post(`${this.apiUrl}/users`, { email, customCategories })
+      .then(() => this.setState({ subscribed: true }))
   }
 
   handleReorder(category, direction) {
@@ -354,15 +367,16 @@ class App extends React.Component {
       <main className={classes.layout}>
         <Typography variant="h1">Reddit By Email</Typography>
         <Typography variant="h6" className={classes.subheader}>
-          Get the most interesting posts from Reddit, delivered to your inbox daily 
+        Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
         </Typography>
         <Typography variant="h6"> 
-          Preview below, then <Button variant="outlined" onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" onClick={this.openSubscribeModal}>subscribe</Button>
+          Preview below, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
         </Typography>
-        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe}/>
+        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
         {emailPreview}
+        <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
       </main>
-      <Hidden smDown implementation='css'>
+      <Hidden mdDown implementation='css'>
         <Drawer variant ='permanent' anchor='right' open={true}>
           <List>
             <ListItem className={classes.checkAll} onClick={this.toggleAll}>
@@ -372,7 +386,7 @@ class App extends React.Component {
           {drawerContents}
         </Drawer>
       </Hidden>
-      <Hidden mdUp implementation='css'>
+      <Hidden lgUp implementation='css'>
         <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
           <List>
             <ListItem className={classes.checkAll} onClick={this.toggleAll}>

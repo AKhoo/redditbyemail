@@ -1,0 +1,44 @@
+# serverless.yml
+
+service: redditByEmail
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  environment:
+    mongoUrl: ${file(./config.${self:provider.stage}.json):mongoUrl}
+    sendEmailsFunction: ${file(./config.${self:provider.stage}.json):sendEmailsFunction}
+    apiRoot: ${file(./config.${self:provider.stage}.json):apiRoot}
+
+functions:
+  pollReddit:
+    handler: db/pollReddit.handler
+    memorySize: 512
+    timeout: 300
+  sendEmails:
+    handler: server/email.handler
+    memorySize: 512
+    timeout: 300
+  apiServer:
+    handler: server/index.handler
+    events:
+      - http:
+          path: api/posts
+          method: get
+          cors: true
+      - http:
+          path: api/users
+          method: post
+          cors: true
+      - http:
+          path: unsubscribe
+          method: get
+          cors: true
+
+plugins:
+  - serverless-offline

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/reddit', { useNewUrlParser: true });
+const env = require('../.env');
+mongoose.connect(process.env.mongoUrl || env.mongoUrl, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 

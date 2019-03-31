@@ -1,4 +1,3 @@
-import Email from './components/Email.jsx';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server'
 import { SheetsRegistry } from 'jss';
@@ -9,6 +8,7 @@ import {
   createGenerateClassName,
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Email from './components/Email.jsx';
 
 
  // Create a sheetsRegistry instance.
@@ -28,7 +28,7 @@ import Typography from '@material-ui/core/Typography';
  const generateClassName = createGenerateClassName();
 
  // Render the component to a string.
- const styledEmail = (categoriesSelected, callback) => {
+ const styledEmail = (emailAddress, categoriesSelected, callback) => {
   const today = new Date();
   const dateString = `${today.toLocaleString('en', { weekday: 'long'})} ${today.toLocaleString('en', { year: 'numeric', month: 'long', day: 'numeric' })}`;
   const html = ReactDOMServer.renderToString(
