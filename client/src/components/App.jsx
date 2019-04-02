@@ -48,6 +48,9 @@ const styles = theme => ({
   heroButton: {
     marginLeft: 5,
     marginRight: 5
+  },
+  drawer: {
+    background: 'white',
   }
 });
 
@@ -389,7 +392,12 @@ class App extends React.Component {
           <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
         </main>
         <Hidden mdDown implementation='css'>
-          <Drawer variant ='permanent' anchor='right' open={true}>
+          <Drawer 
+            variant ='permanent' 
+            anchor='right' 
+            open={true}
+            classes={{ paper: classes.drawer }}
+          >
             <List>
               <ListItem className={classes.checkAll} onClick={this.toggleAll}>
               <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
@@ -399,7 +407,13 @@ class App extends React.Component {
           </Drawer>
         </Hidden>
         <Hidden lgUp implementation='css'>
-          <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
+          <Drawer 
+            variant ='temporary' 
+            anchor='right' 
+            open={this.state.mobileDrawerOpen} 
+            onClose={this.closeMobileDrawer}
+            classes={{ paper: classes.drawer }}
+          >
             <List>
               <ListItem className={classes.checkAll} onClick={this.toggleAll}>
               <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
