@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -10,10 +9,17 @@ import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import ListCategory from './ListCategory.jsx'
 import Subscribe from './Subscribe.jsx'
 import Email from './Email.jsx'
+import LayoutPreference from './LayoutPreference.jsx'
+
+const theme = createMuiTheme({
+  palette: {
+    background: 'white',
+  }
+});
 
 const styles = theme => ({
   layout: {
@@ -362,41 +368,48 @@ class App extends React.Component {
         handleReorder = {this.handleReorder}
       />)
     return (
-      <React.Fragment>
-      <CssBaseline />
-      <main className={classes.layout}>
-        <Typography variant="h1">Reddit By Email</Typography>
-        <Typography variant="h6" className={classes.subheader}>
-        Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
-        </Typography>
-        <Typography variant="h6"> 
-          Preview below, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
-        </Typography>
-        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
-        {emailPreview}
-        <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
-      </main>
-      <Hidden mdDown implementation='css'>
-        <Drawer variant ='permanent' anchor='right' open={true}>
-          <List>
-            <ListItem className={classes.checkAll} onClick={this.toggleAll}>
-            <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
-            </ListItem>
-          </List>
-          {drawerContents}
-        </Drawer>
-      </Hidden>
-      <Hidden lgUp implementation='css'>
-        <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
-          <List>
-            <ListItem className={classes.checkAll} onClick={this.toggleAll}>
-            <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
-            </ListItem>
-          </List>
-          {drawerContents}
-        </Drawer>
-      </Hidden>
-      </React.Fragment>
+      <MuiThemeProvider theme={theme}>
+        <React.Fragment>
+        <CssBaseline />
+        <main className={classes.layout}>
+          <Typography variant="h1">Reddit By Email</Typography>
+          <Typography variant="h6" className={classes.subheader}>
+          Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
+          </Typography>
+
+          <LayoutPreference/>
+
+          <Typography variant="h6"> 
+            Preview below, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
+          </Typography>
+          <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
+          
+          {emailPreview}
+
+          <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
+        </main>
+        <Hidden mdDown implementation='css'>
+          <Drawer variant ='permanent' anchor='right' open={true}>
+            <List>
+              <ListItem className={classes.checkAll} onClick={this.toggleAll}>
+              <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
+              </ListItem>
+            </List>
+            {drawerContents}
+          </Drawer>
+        </Hidden>
+        <Hidden lgUp implementation='css'>
+          <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
+            <List>
+              <ListItem className={classes.checkAll} onClick={this.toggleAll}>
+              <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
+              </ListItem>
+            </List>
+            {drawerContents}
+          </Drawer>
+        </Hidden>
+        </React.Fragment>
+      </MuiThemeProvider>
     )
   }
 }
