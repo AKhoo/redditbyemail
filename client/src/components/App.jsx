@@ -393,9 +393,9 @@ class App extends React.Component {
         </main>
         <Hidden mdDown implementation='css'>
           <Drawer 
-            variant ='permanent' 
+            variant ='temporary' 
             anchor='right' 
-            open={true}
+            open={false}
             classes={{ paper: classes.drawer }}
           >
             <List>
