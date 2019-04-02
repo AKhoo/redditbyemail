@@ -20,6 +20,9 @@ const styles = {
   optionText: {
     'line-height': 'normal',
   },
+  icon: {
+    'border-radius': 0,
+  }
 };
 
 const Option = (props) => {
@@ -35,7 +38,7 @@ const Option = (props) => {
         }
         avatar={
           <Avatar 
-            src='https://material.io/tools/icons/static/icons/baseline-opacity-24px.svg'
+            src={props.icon}
             className={classes.icon}
           />
         }
