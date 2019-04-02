@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import { BrowserRouter as Router, Route, Link as RouterLink } from "react-router-dom";
 
 const styles = {
   card: {
@@ -23,6 +24,7 @@ const styles = {
   },
   optionText: {
     'line-height': 'normal',
+    'text-decoration': 'none',
   },
   icon: {
     'border-radius': 0,
@@ -33,20 +35,22 @@ const Option = (props) => {
   const { classes } = props;
   return (
     <Card className={classes.card} elevation={0}>
-      <CardHeader 
-        disableTypography={true}
-        title={
-          <Typography variant="subtitle1" className={classes.optionText}>
-            {props.option}
-          </Typography>
-        }
-        avatar={
-          <Avatar 
-            src={props.icon}
-            className={classes.icon}
-          />
-        }
-      />
+      <RouterLink to={props.link}>
+        <CardHeader 
+          disableTypography={true}
+          title={
+            <Typography variant="subtitle1" className={classes.optionText}>
+              {props.option}
+            </Typography>
+          }
+          avatar={
+            <Avatar 
+              src={props.icon}
+              className={classes.icon}
+            />
+          }
+        />
+      </RouterLink>
     </Card>
   )
 };

@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Link as RouterLink } from "react-router-dom";
 import ListCategory from './ListCategory.jsx'
 import Subscribe from './Subscribe.jsx'
 import Email from './Email.jsx'
@@ -374,54 +375,56 @@ class App extends React.Component {
       <MuiThemeProvider theme={theme}>
         <React.Fragment>
         <CssBaseline />
-        <main className={classes.layout}>
-          <Typography variant="h1">Reddit By Email</Typography>
-          <Typography variant="h6" className={classes.subheader}>
-          Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
-          </Typography>
+          <Router>
+          <main className={classes.layout}>
+            <Typography variant="h1">Reddit By Email</Typography>
+            <Typography variant="h6" className={classes.subheader}>
+            Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
+            </Typography>
 
-          <LayoutPreference/>
+            <LayoutPreference/>
 
-          <Typography variant="h6"> 
-            Preview your newsletter, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
-          </Typography>
-          <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
-          
-          {emailPreview}
+            <Typography variant="h6"> 
+              Preview your newsletter, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
+            </Typography>
+            <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
+            
+            {emailPreview}
 
-          <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
-        </main>
-        <Hidden mdDown implementation='css'>
-          <Drawer 
-            variant ='temporary' 
-            anchor='right' 
-            open={false}
-            classes={{ paper: classes.drawer }}
-          >
-            <List>
-              <ListItem className={classes.checkAll} onClick={this.toggleAll}>
-              <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
-              </ListItem>
-            </List>
-            {drawerContents}
-          </Drawer>
-        </Hidden>
-        <Hidden lgUp implementation='css'>
-          <Drawer 
-            variant ='temporary' 
-            anchor='right' 
-            open={this.state.mobileDrawerOpen} 
-            onClose={this.closeMobileDrawer}
-            classes={{ paper: classes.drawer }}
-          >
-            <List>
-              <ListItem className={classes.checkAll} onClick={this.toggleAll}>
-              <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
-              </ListItem>
-            </List>
-            {drawerContents}
-          </Drawer>
-        </Hidden>
+            <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
+          </main>
+          <Hidden mdDown implementation='css'>
+            <Drawer 
+              variant ='temporary' 
+              anchor='right' 
+              open={false}
+              classes={{ paper: classes.drawer }}
+            >
+              <List>
+                <ListItem className={classes.checkAll} onClick={this.toggleAll}>
+                <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
+                </ListItem>
+              </List>
+              {drawerContents}
+            </Drawer>
+          </Hidden>
+          <Hidden lgUp implementation='css'>
+            <Drawer 
+              variant ='temporary' 
+              anchor='right' 
+              open={this.state.mobileDrawerOpen} 
+              onClose={this.closeMobileDrawer}
+              classes={{ paper: classes.drawer }}
+            >
+              <List>
+                <ListItem className={classes.checkAll} onClick={this.toggleAll}>
+                <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
+                </ListItem>
+              </List>
+              {drawerContents}
+            </Drawer>
+          </Hidden>
+        </Router>
         </React.Fragment>
       </MuiThemeProvider>
     )
