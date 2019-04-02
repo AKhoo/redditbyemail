@@ -84,6 +84,7 @@ class App extends React.Component {
     this.handleSubscribe = this.handleSubscribe.bind(this);
     this.handleReorder = this.handleReorder.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
+    this.handleLayoutClick = this.handleLayoutClick.bind(this);
   }
 
   componentDidMount() {
@@ -241,6 +242,11 @@ class App extends React.Component {
     this.setState({ categories }, this.showTopPosts);
   }
 
+  handleLayoutClick() {
+    const categories = returnCategoriesByPath();
+    this.setState({ categories }, this.showTopPosts);
+  }
+
   render () {
     const {classes} = this.props;
     const categoriesAvailable = Object.entries(this.state.categories).sort((catA, catB) => catA[1].order - catB[1].order);
@@ -265,12 +271,12 @@ class App extends React.Component {
         <CssBaseline />
           <Router>
           <main className={classes.layout}>
-            <Typography variant="h3"  className={classes.title}>Stay sharp.</Typography>
+            <Typography variant="h3" className={classes.title}>Stay sharp.</Typography>
             <Typography variant="h4" className={classes.subheader}>
             Get the internet's most recommended articles for the topics you care about, delivered daily.
             </Typography>
 
-            <LayoutPreference/>
+            <LayoutPreference handleLayoutClick={this.handleLayoutClick}/>
 
             <Typography variant="h6"> 
               Preview your newsletter, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>

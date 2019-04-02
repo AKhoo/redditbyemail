@@ -19,6 +19,9 @@ const styles = {
       cursor: 'pointer',
     }
   },
+  activeCard: {
+    border: '1px solid rgba(255,0,0,0.87)',
+  },
   content: {
     'line-height': 'normal',
   },
@@ -31,10 +34,12 @@ const styles = {
   }
 };
 
+// If window.location.pathname = props.link, then styling should be different (box highlighted red)
+
 const Option = (props) => {
-  const { classes } = props;
+  const { classes, handleLayoutClick } = props;
   return (
-    <Card className={classes.card} elevation={0}>
+    <Card className={`${classes.card} ${window.location.pathname === props.link ? classes.activeCard : ''}`} elevation={0} onClick={handleLayoutClick}>
       <RouterLink to={props.link}>
         <CardHeader 
           disableTypography={true}
