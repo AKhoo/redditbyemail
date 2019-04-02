@@ -1,10 +1,18 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Option from './Option.jsx'
 
+const styles = {
+  options: {
+    'margin-bottom': 20,
+  }
+}
+
 const LayoutPreference = (props) => {
+  const {classes} = props;
   return (
-    <div>
+    <div className={classes.options}>
       <Typography variant="h6">
         What do you want to read first?
       </Typography>
@@ -22,4 +30,4 @@ const LayoutPreference = (props) => {
   )
 };
 
-export default LayoutPreference;
+export default withStyles(styles)(LayoutPreference);

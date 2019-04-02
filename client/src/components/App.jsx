@@ -383,7 +383,7 @@ class App extends React.Component {
           <LayoutPreference/>
 
           <Typography variant="h6"> 
-            Preview below, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
+            Preview your newsletter, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
           </Typography>
           <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
           

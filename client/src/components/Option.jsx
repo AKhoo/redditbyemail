@@ -13,6 +13,10 @@ const styles = {
     'padding-top': 2,
     border: '1px solid #e6e6e6',
     display: 'inline-block',
+    '&:hover': {
+      border: '1px solid grey',
+      cursor: 'pointer',
+    }
   },
   content: {
     'line-height': 'normal',
