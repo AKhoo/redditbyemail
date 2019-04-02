@@ -5,7 +5,7 @@ import Option from './Option.jsx'
 
 const styles = {
   options: {
-    'margin-bottom': 20,
+    'margin-bottom': 30,
   }
 }
 

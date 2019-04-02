@@ -24,15 +24,19 @@ const theme = createMuiTheme({
 
 const styles = theme => ({
   layout: {
-    marginTop: theme.spacing.unit * 4,
-    marginLeft: theme.spacing.unit * 6,
-    marginBottom: theme.spacing.unit * 6,
+    marginTop: theme.spacing.unit * 6,
+    marginLeft: theme.spacing.unit * 8,
+    marginBottom: theme.spacing.unit * 8,
     [theme.breakpoints.up('md')]: {
       width: 750,
     }
   },
+  title: {
+    'font-weight': 500,
+    marginBottom: 15,
+  },
   subheader: {
-    marginBottom: 30,
+    marginBottom: 40,
   },
   checkAll: {
     height: 25,
@@ -377,9 +381,9 @@ class App extends React.Component {
         <CssBaseline />
           <Router>
           <main className={classes.layout}>
-            <Typography variant="h1">Reddit By Email</Typography>
-            <Typography variant="h6" className={classes.subheader}>
-            Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
+            <Typography variant="h3"  className={classes.title}>Stay sharp.</Typography>
+            <Typography variant="h4" className={classes.subheader}>
+            Get the internet's most recommended articles for the topics you care about, delivered daily.
             </Typography>
 
             <LayoutPreference/>
