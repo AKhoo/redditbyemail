@@ -34,13 +34,11 @@ const styles = {
   }
 };
 
-// If window.location.pathname = props.link, then styling should be different (box highlighted red)
-
 const Option = (props) => {
-  const { classes, handleLayoutClick } = props;
-  return (
-    <Card className={`${classes.card} ${window.location.pathname === props.link ? classes.activeCard : ''}`} elevation={0} onClick={handleLayoutClick}>
-      <RouterLink to={props.link}>
+  const { classes, handleLayoutClick, openMobileDrawer, customize } = props;
+  if (customize) {
+    return (
+      <Card className={`${classes.card} ${window.location.pathname === props.link ? classes.activeCard : ''}`} elevation={0} onClick={openMobileDrawer}>
         <CardHeader 
           disableTypography={true}
           title={
@@ -55,9 +53,30 @@ const Option = (props) => {
             />
           }
         />
-      </RouterLink>
-    </Card>
-  )
+      </Card>
+    )
+  } else {
+    return (
+      <Card className={`${classes.card} ${window.location.pathname === props.link ? classes.activeCard : ''}`} elevation={0} onClick={handleLayoutClick}>
+        <RouterLink to={props.link}>
+          <CardHeader 
+            disableTypography={true}
+            title={
+              <Typography variant="subtitle1" className={classes.optionText}>
+                {props.option}
+              </Typography>
+            }
+            avatar={
+              <Avatar 
+                src={props.icon}
+                className={classes.icon}
+              />
+            }
+          />
+        </RouterLink>
+      </Card>
+    )
+  }
 };
 
 export default withStyles(styles)(Option);

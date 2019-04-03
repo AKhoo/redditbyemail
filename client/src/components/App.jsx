@@ -271,7 +271,7 @@ class App extends React.Component {
               <Route path="/" component={HeroDefault} />
             </Switch>
 
-            <LayoutPreference handleLayoutClick={this.handleLayoutClick}/>
+            <LayoutPreference handleLayoutClick={this.handleLayoutClick} openMobileDrawer={this.openMobileDrawer}/>
 
             <Typography variant="h6"> 
               Preview your newsletter, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
