@@ -10,12 +10,13 @@ import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { BrowserRouter as Router, Route, Link as RouterLink } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ListCategory from './ListCategory.jsx';
 import Subscribe from './Subscribe.jsx';
 import Email from './Email.jsx';
 import LayoutPreference from './LayoutPreference.jsx';
 import returnCategoriesByPath from '../layouts';
+import { HeroDefaultWithStyles as HeroDefault, HeroFascinatingWithStyles as HeroFascinating, HeroShortStoriesWithStyles as HeroShortStories } from './Hero.jsx';
 
 const theme = createMuiTheme({
   palette: {
@@ -31,13 +32,6 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       width: 750,
     }
-  },
-  title: {
-    'font-weight': 500,
-    marginBottom: 15,
-  },
-  subheader: {
-    marginBottom: 40,
   },
   checkAll: {
     height: 25,
@@ -271,10 +265,11 @@ class App extends React.Component {
         <CssBaseline />
           <Router>
           <main className={classes.layout}>
-            <Typography variant="h3" className={classes.title}>Stay sharp.</Typography>
-            <Typography variant="h4" className={classes.subheader}>
-            Get the internet's most recommended articles for the topics you care about, delivered daily.
-            </Typography>
+            <Switch>
+              <Route path="/fascinating" component={HeroFascinating} />
+              <Route path="/shortstories" component={HeroShortStories} />
+              <Route path="/" component={HeroDefault} />
+            </Switch>
 
             <LayoutPreference handleLayoutClick={this.handleLayoutClick}/>
 

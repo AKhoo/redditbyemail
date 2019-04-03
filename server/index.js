@@ -9,6 +9,7 @@ const app = express();
 
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/../client/dist'));
+app.use(['/businessandtech', '/science', '/psychology', '/space', '/javascript', '/gadgets', '/fascinating', '/shortstories'], express.static(__dirname + '/../client/dist'));
 
 const lambda = new aws.Lambda({
   region: 'us-east-1',
