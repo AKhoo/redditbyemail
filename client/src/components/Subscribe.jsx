@@ -47,6 +47,11 @@ class Subscribe extends React.Component {
         <Dialog
           open={this.props.subscribeModalOpen}
           onClose={this.props.closeSubscribeModal}
+          PaperProps={{
+            style: {
+              backgroundColor: 'white',
+            }
+          }}
         >
           <DialogTitle>Please Check Your Inbox Now</DialogTitle>
           <DialogContent>
@@ -72,6 +77,11 @@ class Subscribe extends React.Component {
         <Dialog
           open={this.props.subscribeModalOpen}
           onClose={this.props.closeSubscribeModal}
+          PaperProps={{
+            style: {
+              backgroundColor: 'white',
+            }
+          }}
         >
           <DialogTitle>Subscribe</DialogTitle>
           <DialogContent>
