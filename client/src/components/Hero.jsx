@@ -5,12 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = {
   title: {
     'font-weight': 500,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   subheader: {
     marginBottom: 40,
   },
-}
+};
 
 const HeroDefault = (props) => {
   const { classes } = props;
@@ -22,7 +22,7 @@ const HeroDefault = (props) => {
     </Typography>
   </div>
   )
-}
+};
 
 const HeroFascinating = (props) => {
   const { classes } = props;
@@ -34,7 +34,7 @@ const HeroFascinating = (props) => {
     </Typography>
   </div>
   )
-}
+};
 
 const HeroShortStories = (props) => {
   const { classes } = props;
@@ -46,7 +46,7 @@ const HeroShortStories = (props) => {
     </Typography>
   </div>
   )
-}
+};
 
 const HeroDefaultWithStyles = withStyles(styles)(HeroDefault);
 const HeroFascinatingWithStyles = withStyles(styles)(HeroFascinating);
