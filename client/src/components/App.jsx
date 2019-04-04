@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ListCategory from './ListCategory.jsx';
@@ -46,11 +47,22 @@ const styles = theme => ({
     color: 'grey'
   },
   heroButton: {
-    marginLeft: 5,
+    marginTop: 6,
+    marginLeft: 10,
     marginRight: 5
   },
   drawer: {
     background: 'white',
+  },
+  textField: {
+    margin: 0,
+  },
+  cta: {
+    marginBottom: 8,
+  },
+  emailInput: {
+    width: 275,
+    height: 15,
   }
 });
 
@@ -273,9 +285,28 @@ class App extends React.Component {
 
             <LayoutPreference handleLayoutClick={this.handleLayoutClick} openMobileDrawer={this.openMobileDrawer}/>
 
-            <Typography variant="h6"> 
-              Preview your newsletter, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
-            </Typography>
+            <div>
+              <div>
+              <Typography variant="h6" className={classes.cta}> 
+              Preview below. Join our free newsletter today!
+              </Typography>
+              </div>
+              <div>
+                <TextField
+                  id="outlined-email-input"
+                  label="Enter your email address"
+                  className={classes.textField}
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{ classes: { input: classes.emailInput } }}
+                />
+                <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
+              </div>
+            </div>
+            
             <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
             
             {emailPreview}

@@ -18,7 +18,7 @@ const HeroDefault = (props) => {
   <div>
     <Typography variant="h3" className={classes.title}>Stay sharp.</Typography>
     <Typography variant="h4" className={classes.subheader}>
-    Get the internet's most recommended articles for the topics you care about, delivered daily.
+    Get the internet's most recommended articles for the topics you care about, daily by email.
     </Typography>
   </div>
   )

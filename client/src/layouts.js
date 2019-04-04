@@ -21,22 +21,12 @@ const returnCategoriesByPath = (path) => {
 };
 
 const defaultCategories = {
-  'Entertaining Reads': {
-    name: 'Entertaining Reads',
-    checked: true,
-    order: 1,
-    subs: {
-      'BestOf': true,
-      'AskReddit': true,
-      'WritingPrompts': false,
-    }
-  },
   'Interesting Facts': {
     name: 'Interesting Facts',
     checked: true,
-    order: 2,
+    order: 1,
     subs: {
-      'TodayILearned': true,
+      'TodayILearned': false,
       'ExplainLikeImFive': true,
       'Wikipedia': true,
     },
@@ -44,12 +34,22 @@ const defaultCategories = {
   'Business & Technology': {
     name: 'Business & Technology',
     checked: true,
-    order: 3,
+    order: 2,
     subs: {
       'Business': true,
       'Futurology': true,
       'Gadgets': true,
       'Technology': true,
+    }
+  },
+  'Entertaining Reads': {
+    name: 'Entertaining Reads',
+    checked: true,
+    order: 3,
+    subs: {
+      'BestOf': true,
+      'AskReddit': true,
+      'WritingPrompts': false,
     }
   },
   'Science & Economics': {

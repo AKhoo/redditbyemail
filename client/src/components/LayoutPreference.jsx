@@ -5,7 +5,10 @@ import Option from './Option.jsx'
 
 const styles = {
   options: {
-    'margin-bottom': 30,
+    'margin-bottom': 15,
+  },
+  lead: {
+    'font-weight': 400,
   }
 }
 
@@ -13,8 +16,8 @@ const LayoutPreference = (props) => {
   const {classes, handleLayoutClick, openMobileDrawer} = props;
   return (
     <div className={classes.options}>
-      <Typography variant="h6">
-        What do you want to read first?
+      <Typography variant="h6" className={classes.lead}>
+      What should be at the top of your digest?
       </Typography>
       <div>
         <Option option='Business & Technology' icon='icon_biz.png' link='/businessandtech' handleLayoutClick={handleLayoutClick}/>
