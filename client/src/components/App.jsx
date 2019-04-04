@@ -26,7 +26,7 @@ const theme = createMuiTheme({
 
 const styles = theme => ({
   layout: {
-    marginTop: theme.spacing.unit * 5,
+    marginTop: theme.spacing.unit * 6,
     marginLeft: theme.spacing.unit * 8,
     marginBottom: theme.spacing.unit * 8,
     [theme.breakpoints.up('md')]: {
@@ -205,7 +205,8 @@ class App extends React.Component {
       return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
     });
     axios.post(`${this.apiUrl}/users`, { email, customCategories })
-      .then(() => this.setState({ subscribed: true }))
+      .then(() => { this.setState({ subscribed: true }, this.openSubscribeModal); })
+      .catch((msg) => console.log(msg));
   }
 
   handleReorder(category, direction) {
@@ -268,7 +269,7 @@ class App extends React.Component {
             </Switch>
 
             <LayoutPreference handleLayoutClick={this.handleLayoutClick} openMobileDrawer={this.openMobileDrawer}/>
-            <Subscribe openSubscribeModal={this.openSubscribeModal}/>
+            <Subscribe handleSubscribe={this.handleSubscribe} subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal}/>
             
             {emailPreview}
 
