@@ -40,6 +40,11 @@ app.post('/api/users', (req, res) => {
     }, (error, data) => {
       if (error) {
         console.log('error', error);
+        res.set({
+          "Access-Control-Allow-Origin" : "*",
+          "Access-Control-Allow-Credentials" : true,
+        });
+        res.status(400).send(error);
       }
       if (data.Payload) {
         console.log('Lambda function invoked: redditByEmail-dev-sendEmails');

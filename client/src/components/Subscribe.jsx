@@ -22,6 +22,7 @@ const styles = {
   emailInput: {
     width: 275,
     height: 15,
+    backgroundColor: 'floralwhite',
   },
   heroButton: {
     marginTop: 6,

@@ -189,6 +189,10 @@ class App extends React.Component {
   }
 
   handleSubscribe(email) {
+    gtag('event', 'clicked_subscribe', {
+      'event_category': 'checkout',
+      'event_label': `layout_${window.location.pathname}`,
+    });
     let customCategories = [];
     for (let cat in this.state.categories) {
       if (this.state.categories[cat].checked) {
@@ -205,7 +209,18 @@ class App extends React.Component {
       return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
     });
     axios.post(`${this.apiUrl}/users`, { email, customCategories })
-      .then(() => { this.setState({ subscribed: true }, this.openSubscribeModal); })
+      .then(() => { 
+        this.setState(
+          { subscribed: true }, 
+          () => {
+            this.openSubscribeModal();
+            gtag('event', 'subscribe_success', {
+              'event_category': 'subscribed',
+              'event_label': `layout_${window.location.pathname}`,
+            });
+          }
+        ); 
+      })
       .catch((msg) => console.log(msg));
   }
 
@@ -234,6 +249,10 @@ class App extends React.Component {
   }
 
   handleLayoutClick() {
+    gtag('event', 'view_layout', {
+      'event_category': 'engagement',
+      'event_label': `layout_${window.location.pathname}`,
+    });
     const categories = returnCategoriesByPath();
     this.setState({ categories }, this.showTopPosts);
   }
