@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import { BrowserRouter as Router, Route, Link as RouterLink } from "react-router-dom";
 
 const styles = {
@@ -36,28 +37,12 @@ const styles = {
 
 const Option = (props) => {
   const { classes, handleLayoutClick, openMobileDrawer, customize } = props;
-  if (customize) {
     return (
-      <Card className={`${classes.card} ${window.location.pathname === props.link ? classes.activeCard : ''}`} elevation={0} onClick={openMobileDrawer}>
-        <CardHeader 
-          disableTypography={true}
-          title={
-            <Typography variant="subtitle1" className={classes.optionText}>
-              {props.option}
-            </Typography>
-          }
-          avatar={
-            <Avatar 
-              src={props.icon}
-              className={classes.icon}
-            />
-          }
-        />
-      </Card>
-    )
-  } else {
-    return (
-      <Card className={`${classes.card} ${window.location.pathname === props.link ? classes.activeCard : ''}`} elevation={0} onClick={handleLayoutClick}>
+      <Card 
+        className={`${classes.card} ${window.location.pathname === props.link ? classes.activeCard : ''}`} 
+        elevation={0} 
+        onClick={props.link ? handleLayoutClick : openMobileDrawer}
+      >
         <RouterLink to={props.link}>
           <CardHeader 
             disableTypography={true}
@@ -76,7 +61,6 @@ const Option = (props) => {
         </RouterLink>
       </Card>
     )
-  }
 };
 
 export default withStyles(styles)(Option);

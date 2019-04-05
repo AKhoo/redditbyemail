@@ -27,7 +27,7 @@ const LayoutPreference = (props) => {
         <Option option='JavaScript' icon='icon_js.png' link='/javascript' handleLayoutClick={handleLayoutClick} />
         <Option option='Fascinating' icon='icon_fascinating.png' link='/fascinating' handleLayoutClick={handleLayoutClick} />
         <Option option='Short Stories' icon='icon_stories.png' link='/shortstories' handleLayoutClick={handleLayoutClick} />
-        <Option option='Let Me Customize' icon='icon_custom.png' customize={true} openMobileDrawer={openMobileDrawer} />
+        <Option option='Let Me Customize' icon='icon_custom.png' link={null} customize={true} openMobileDrawer={openMobileDrawer} />
       </div>
     </div>
   )
