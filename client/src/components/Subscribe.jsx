@@ -59,8 +59,13 @@ class Subscribe extends React.Component {
   }
 
   render() {
-    const { classes, handleSubscribe, subscribeModalOpen, closeSubscribeModal } = this.props;
-    console.log
+    const { classes, handleSubscribe, subscribeModalOpen, closeSubscribeModal, subscribed } = this.props;
+    let button;
+    if (subscribed) {
+      button = <Button variant="contained" color="default" className={classes.heroButton} disabled>subscribed!</Button>
+    } else {
+      button = <Button variant="contained" color="secondary" className={classes.heroButton} onClick={() => {handleSubscribe(this.state.email)}}>subscribe</Button>
+    }
     return (
       <React.Fragment>
         <div className={classes.container}>
@@ -84,7 +89,7 @@ class Subscribe extends React.Component {
               onChange={this.handleInputChange}
               onKeyPress={this.handleKeyPress}
             />
-            <Button variant="contained" color="secondary" className={classes.heroButton} onClick={() => {handleSubscribe(this.state.email)}}>subscribe</Button>
+            {button}
           </div>
         </div>
 

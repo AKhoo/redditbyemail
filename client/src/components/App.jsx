@@ -269,7 +269,7 @@ class App extends React.Component {
             </Switch>
 
             <LayoutPreference handleLayoutClick={this.handleLayoutClick} openMobileDrawer={this.openMobileDrawer}/>
-            <Subscribe handleSubscribe={this.handleSubscribe} subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal}/>
+            <Subscribe handleSubscribe={this.handleSubscribe} subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} subscribed={this.state.subscribed}/>
             
             {emailPreview}
 
