@@ -1,6 +1,6 @@
-# Project Title
+# Reddit By Email
 
-The code that powers redditbyemail.com -- A daily digest of trending articles for topics that matter.
+This is the code that powers redditbyemail.com -- A daily digest of trending articles for topics that matter.
 
 ## Getting Started
 
