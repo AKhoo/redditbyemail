@@ -9,6 +9,7 @@ const app = express();
 
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/../client/dist'));
+app.use(['/businessandtech', '/science', '/psychology', '/space', '/javascript', '/gadgets', '/fascinating', '/shortstories'], express.static(__dirname + '/../client/dist'));
 
 const lambda = new aws.Lambda({
   region: 'us-east-1',
@@ -39,6 +40,11 @@ app.post('/api/users', (req, res) => {
     }, (error, data) => {
       if (error) {
         console.log('error', error);
+        res.set({
+          "Access-Control-Allow-Origin" : "*",
+          "Access-Control-Allow-Credentials" : true,
+        });
+        res.status(400).send(error);
       }
       if (data.Payload) {
         console.log('Lambda function invoked: redditByEmail-dev-sendEmails');

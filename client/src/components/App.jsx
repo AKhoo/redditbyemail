@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -10,22 +9,29 @@ import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
-import { withStyles } from '@material-ui/core/styles';
-import ListCategory from './ListCategory.jsx'
-import Subscribe from './Subscribe.jsx'
-import Email from './Email.jsx'
+import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import ListCategory from './ListCategory.jsx';
+import Subscribe from './Subscribe.jsx';
+import Email from './Email.jsx';
+import LayoutPreference from './LayoutPreference.jsx';
+import returnCategoriesByPath from '../layouts';
+import { HeroDefaultWithStyles as HeroDefault, HeroFascinatingWithStyles as HeroFascinating, HeroShortStoriesWithStyles as HeroShortStories } from './Hero.jsx';
+
+const theme = createMuiTheme({
+  palette: {
+    background: 'white',
+  }
+});
 
 const styles = theme => ({
   layout: {
-    marginTop: theme.spacing.unit * 4,
-    marginLeft: theme.spacing.unit * 6,
-    marginBottom: theme.spacing.unit * 6,
+    marginTop: theme.spacing.unit * 6,
+    marginLeft: theme.spacing.unit * 8,
+    marginBottom: theme.spacing.unit * 8,
     [theme.breakpoints.up('md')]: {
       width: 750,
     }
-  },
-  subheader: {
-    marginBottom: 30,
   },
   checkAll: {
     height: 25,
@@ -39,10 +45,9 @@ const styles = theme => ({
   footerText: {
     color: 'grey'
   },
-  heroButton: {
-    marginLeft: 5,
-    marginRight: 5
-  }
+  drawer: {
+    background: 'white',
+  },
 });
 
 class App extends React.Component {
@@ -51,124 +56,7 @@ class App extends React.Component {
     this.state = { 
       email: '',
       subscribed: false,
-      categories: {
-        'Interesting Facts': {
-          name: 'Interesting Facts',
-          checked: true,
-          order: 1,
-          subs: {
-            'TodayILearned': true,
-            'ExplainLikeImFive': true,
-            'Wikipedia': true,
-          },
-        },
-        'Business & Technology': {
-          name: 'Business & Technology',
-          checked: true,
-          order: 2,
-          subs: {
-            'Business': true,
-            'Futurology': true,
-            'Gadgets': true,
-            'Technology': true,
-          }
-        },
-        'Science': {
-          name: 'Science',
-          checked: true,
-          order: 3,
-          subs: {
-            'Economics': true,
-            'Engineering': true,
-            'History': true,
-            'Philosophy': true,
-            'Psychology': true,
-            'Science': true,
-            'Space': true,
-          }
-        },
-        'Worth Watching': {
-          name: 'Worth Watching',
-          checked: true,
-          order: 4,
-          subs: {
-            'Documentaries': true,
-            'NetflixBestOf': true,
-          }
-        },
-        'Entertaining Reads': {
-          name: 'Entertaining Reads',
-          checked: true,
-          order: 5,
-          subs: {
-            'BestOf': true,
-            'AskReddit': true,
-            'WritingPrompts': true,
-          }
-        },
-        'Quotes': {
-          name: 'Quotes',
-          checked: true,
-          order: 6,
-          subs: {
-            'Quotes': true,
-            'QuotesPorn': true,
-          }
-        },
-        'JavaScript': {
-          name: 'JavaScript',
-          checked: true,
-          order: 7,
-          subs: {
-            'DailyProgrammer': true,
-            'FrontEnd': true,
-            'JavaScript': true,
-            'Node': true,
-            'ReactJS': true,
-            'WebDev': true,
-            'Web_Design': true,
-          }
-        },
-        'Life Hacks': {
-          name: 'Life Hacks',
-          checked: true,
-          order: 8,
-          subs: {
-            'Lifehacks': true,
-            'LifeProTips': true,
-          }
-        },
-        'Personal Finance': {
-          name: 'Personal Finance',
-          checked: true,
-          order: 9,
-          subs: {
-            'Investing': true,
-            'PersonalFinance': true,
-            'FinancialIndependence': true,
-          }
-        },
-        'Self Improvement': {
-          name: 'Self Improvement',
-          checked: true,
-          order: 10,
-          subs: {
-            'GetMotivated': true,
-            'Productivity': true,
-            'SelfImprovement': true,
-            'ZenHabits': true,
-          }
-        },
-        'Recipes': {
-          name: 'Recipes',
-          checked: true,
-          order: 11,
-          subs: {
-            'GifRecipes': true,
-            'Recipes': true,
-          }
-        },
-      },
+      categories: returnCategoriesByPath(),
       posts: {},
       display: {},
       mobileDrawerOpen: false,
@@ -186,6 +74,7 @@ class App extends React.Component {
     this.handleSubscribe = this.handleSubscribe.bind(this);
     this.handleReorder = this.handleReorder.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
+    this.handleLayoutClick = this.handleLayoutClick.bind(this);
   }
 
   componentDidMount() {
@@ -300,6 +189,10 @@ class App extends React.Component {
   }
 
   handleSubscribe(email) {
+    gtag('event', 'clicked_subscribe', {
+      'event_category': 'checkout',
+      'event_label': `layout_${window.location.pathname}`,
+    });
     let customCategories = [];
     for (let cat in this.state.categories) {
       if (this.state.categories[cat].checked) {
@@ -316,7 +209,19 @@ class App extends React.Component {
       return this.state.categories[catA.name].order - this.state.categories[catB.name].order;
     });
     axios.post(`${this.apiUrl}/users`, { email, customCategories })
-      .then(() => this.setState({ subscribed: true }))
+      .then(() => { 
+        this.setState(
+          { subscribed: true }, 
+          () => {
+            this.openSubscribeModal();
+            gtag('event', 'subscribe_success', {
+              'event_category': 'subscribed',
+              'event_label': `layout_${window.location.pathname}`,
+            });
+          }
+        ); 
+      })
+      .catch((msg) => console.log(msg));
   }
 
   handleReorder(category, direction) {
@@ -343,6 +248,15 @@ class App extends React.Component {
     this.setState({ categories }, this.showTopPosts);
   }
 
+  handleLayoutClick() {
+    gtag('event', 'view_layout', {
+      'event_category': 'engagement',
+      'event_label': `layout_${window.location.pathname}`,
+    });
+    const categories = returnCategoriesByPath();
+    this.setState({ categories }, this.showTopPosts);
+  }
+
   render () {
     const {classes} = this.props;
     const categoriesAvailable = Object.entries(this.state.categories).sort((catA, catB) => catA[1].order - catB[1].order);
@@ -362,41 +276,58 @@ class App extends React.Component {
         handleReorder = {this.handleReorder}
       />)
     return (
-      <React.Fragment>
-      <CssBaseline />
-      <main className={classes.layout}>
-        <Typography variant="h1">Reddit By Email</Typography>
-        <Typography variant="h6" className={classes.subheader}>
-        Get inspired & intrigued with top posts from Reddit, delivered daily (free!)
-        </Typography>
-        <Typography variant="h6"> 
-          Preview below, then <Button variant="contained" className={classes.heroButton} onClick={this.openMobileDrawer}>customize</Button> or <Button variant="contained" color="secondary" className={classes.heroButton} onClick={this.openSubscribeModal}>subscribe</Button>
-        </Typography>
-        <Subscribe subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} handleSubscribe={this.handleSubscribe} subscribed={this.state.subscribed}/>
-        {emailPreview}
-        <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
-      </main>
-      <Hidden mdDown implementation='css'>
-        <Drawer variant ='permanent' anchor='right' open={true}>
-          <List>
-            <ListItem className={classes.checkAll} onClick={this.toggleAll}>
-            <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
-            </ListItem>
-          </List>
-          {drawerContents}
-        </Drawer>
-      </Hidden>
-      <Hidden lgUp implementation='css'>
-        <Drawer variant ='temporary' anchor='right' open={this.state.mobileDrawerOpen} onClose={this.closeMobileDrawer}>
-          <List>
-            <ListItem className={classes.checkAll} onClick={this.toggleAll}>
-            <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
-            </ListItem>
-          </List>
-          {drawerContents}
-        </Drawer>
-      </Hidden>
-      </React.Fragment>
+      <MuiThemeProvider theme={theme}>
+        <React.Fragment>
+        <CssBaseline />
+          <Router>
+          <main className={classes.layout}>
+            <Switch>
+              <Route path="/fascinating" component={HeroFascinating} />
+              <Route path="/shortstories" component={HeroShortStories} />
+              <Route path="/" component={HeroDefault} />
+            </Switch>
+
+            <LayoutPreference handleLayoutClick={this.handleLayoutClick} openMobileDrawer={this.openMobileDrawer}/>
+            <Subscribe handleSubscribe={this.handleSubscribe} subscribeModalOpen={this.state.subscribeModalOpen} closeSubscribeModal={this.closeSubscribeModal} subscribed={this.state.subscribed}/>
+            
+            {emailPreview}
+
+            <Button variant="outlined"><Link className={classes.footerText} href={"https://surveys.hotjar.com/s?siteId=1215551&surveyId=129017"} target="_blank">Leave Feedback</Link></Button>
+          </main>
+          <Hidden mdDown implementation='css'>
+            <Drawer 
+              variant ='temporary' 
+              anchor='right' 
+              open={false}
+              classes={{ paper: classes.drawer }}
+            >
+              <List>
+                <ListItem className={classes.checkAll} onClick={this.toggleAll}>
+                <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
+                </ListItem>
+              </List>
+              {drawerContents}
+            </Drawer>
+          </Hidden>
+          <Hidden lgUp implementation='css'>
+            <Drawer 
+              variant ='temporary' 
+              anchor='right' 
+              open={this.state.mobileDrawerOpen} 
+              onClose={this.closeMobileDrawer}
+              classes={{ paper: classes.drawer }}
+            >
+              <List>
+                <ListItem className={classes.checkAll} onClick={this.toggleAll}>
+                <Typography className={classes.checkAllText}>Check / Uncheck All</Typography>
+                </ListItem>
+              </List>
+              {drawerContents}
+            </Drawer>
+          </Hidden>
+        </Router>
+        </React.Fragment>
+      </MuiThemeProvider>
     )
   }
 }
