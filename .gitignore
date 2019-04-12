@@ -1,4 +1,5 @@
 node_modules
+client/dist/bundle-ssr.js
 client/dist/bundle.js
 .env
 .serverless

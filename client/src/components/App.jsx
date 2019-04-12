@@ -221,7 +221,10 @@ class App extends React.Component {
           }
         ); 
       })
-      .catch((msg) => console.log(msg));
+      .catch((msg) => {
+        console.log(msg);
+        this.openSubscribeModal();
+      });
   }
 
   handleReorder(category, direction) {

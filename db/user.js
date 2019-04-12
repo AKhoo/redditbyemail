@@ -83,6 +83,7 @@ User.add = (object, callback) => {
     })
     .catch((userErr) => {
       console.log('Error - user create', userErr);
+      callback(userErr);
     });
 };
 
